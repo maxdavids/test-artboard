@@ -1,0 +1,34 @@
+{
+  "name": "@spotify-sound-data/webgl",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server --config webpack/dev.js --host 0.0.0.0",
+    "watch": "webpack --watch --config webpack/prod.js",
+    "build": "webpack --config webpack/prod.js"
+  },
+  "devDependencies": {
+    "file-loader": "^4.2.0",
+    "url-loader": "^3.0.0",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "dependencies": {
+    "@types/node": "^12.12.5",
+    "as-number": "^1.0.0",
+    "gl-matrix": "^3.3.0",
+    "load-bmfont": "^1.4.0",
+    "object-assign": "^4.1.1",
+    "squarify": "^1.1.0",
+    "strongly-typed-events": "^1.6.3",
+    "three": "^0.110.0",
+    "three-bmfont-text": "^2.3.0",
+    "three-fbx-loader": "^1.0.3",
+    "three-line-2d": "^1.1.6",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.6.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}

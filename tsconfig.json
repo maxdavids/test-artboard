@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2016",
+      "dom",
+      "dom.iterable",
+      "esnext",
+    ],
+    "sourceMap": true,
+    "target": "es6",
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "strict": false,
+    "allowJs": true
+  }
+}
