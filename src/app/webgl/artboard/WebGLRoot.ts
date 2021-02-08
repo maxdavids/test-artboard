@@ -1,6 +1,6 @@
-import Renderer from '../common/renderer/core/Renderer';
-import Clock from '../common/renderer/Clock';
-import {MainScene} from "./scenes/MainScene";
+import Renderer from '../renderer/core/Renderer';
+import Clock from '../common/Clock';
+import {MainScene} from "./editor/scenes/MainScene";
 
 /**
  * Created by mdavids on 02/01/2019.
@@ -33,9 +33,9 @@ export class WebGLRoot {
   public constructor() {}
 
   public init({
-                onError,
-                canvas,
-              }: {
+    onError,
+    canvas,
+  }: {
     onError: Function;
     canvas: HTMLElement;
   }) {

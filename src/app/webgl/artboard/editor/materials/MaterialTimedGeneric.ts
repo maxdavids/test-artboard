@@ -1,12 +1,12 @@
-import Material from '../../common/renderer/core/Material';
-import Renderer from '../../common/renderer/core/Renderer';
-import Camera from '../../common/renderer/core/Camera';
-import Renderable from '../../common/renderer/core/Renderable';
-import Vector4 from '../../common/renderer/core/Vector4';
-import Shader from '../../common/renderer/core/Shader';
-import Clock from '../../common/renderer/Clock';
-import ITexture from '../../common/renderer/core/ITexture';
-import Vector2 from '../../common/renderer/core/Vector2';
+import Material from '../../../renderer/core/Material';
+import Renderer from '../../../renderer/core/Renderer';
+import Camera from '../../../renderer/core/Camera';
+import Renderable from '../../../renderer/core/Renderable';
+import Vector4 from '../../../renderer/core/Vector4';
+import Shader from '../../../renderer/core/Shader';
+import Clock from '../../../common/Clock';
+import ITexture from '../../../renderer/core/ITexture';
+import Vector2 from '../../../renderer/core/Vector2';
 
 /**
  * Created by mdavids on 19/12/2018.

@@ -1,10 +1,10 @@
-import Material from '../../core/Material';
-import Renderer from '../../core/Renderer';
-import Camera from '../../core/Camera';
-import Renderable from '../../core/Renderable';
+import Material from '../core/Material';
+import Renderer from '../core/Renderer';
+import Camera from '../core/Camera';
+import Renderable from '../core/Renderable';
 import ShaderTexture2D from './shaders/ShaderTexture2D';
-import Vector4 from '../../core/Vector4';
-import Shader from '../../core/Shader';
+import Vector4 from '../core/Vector4';
+import Shader from '../core/Shader';
 
 /**
  * Created by mdavids on 29/04/2016.

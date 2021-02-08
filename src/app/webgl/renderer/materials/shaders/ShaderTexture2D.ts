@@ -1,5 +1,5 @@
-import Renderer from '../../../core/Renderer';
-import Shader from '../../../core/Shader';
+import Renderer from '../../core/Renderer';
+import Shader from '../../core/Shader';
 
 /**
  * Created by mdavids on 01/05/2016.

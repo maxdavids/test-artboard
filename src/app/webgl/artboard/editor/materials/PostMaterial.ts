@@ -1,15 +1,15 @@
 /**
  * Created by mdavids on 26/02/2019.
  */
-import Material from '../../common/renderer/core/Material';
-import Vector2 from '../../common/renderer/core/Vector2';
-import Renderer from '../../common/renderer/core/Renderer';
-import ITexture from '../../common/renderer/core/ITexture';
-import Camera from '../../common/renderer/core/Camera';
-import Renderable from '../../common/renderer/core/Renderable';
-import Clock from '../../common/renderer/Clock';
-import Texture2D from '../../common/renderer/core/Texture2D';
-import Shader from '../../common/renderer/core/Shader';
+import Material from '../../../renderer/core/Material';
+import Vector2 from '../../../renderer/core/Vector2';
+import Renderer from '../../../renderer/core/Renderer';
+import ITexture from '../../../renderer/core/ITexture';
+import Camera from '../../../renderer/core/Camera';
+import Renderable from '../../../renderer/core/Renderable';
+import Clock from '../../../common/Clock';
+import Texture2D from '../../../renderer/core/Texture2D';
+import Shader from '../../../renderer/core/Shader';
 
 export class PostMaterial extends Material {
   public texLUT: Texture2D;

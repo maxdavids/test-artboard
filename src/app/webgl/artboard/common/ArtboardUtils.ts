@@ -1,11 +1,11 @@
-import Camera from '../common/renderer/core/Camera';
-import Vector3 from '../common/renderer/core/Vector3';
-import Transform from '../common/renderer/core/Transform';
-import Vector4 from '../common/renderer/core/Vector4';
-import Vector2 from '../common/renderer/core/Vector2';
+import Camera from '../../renderer/core/Camera';
+import Vector3 from '../../renderer/core/Vector3';
+import Transform from '../../renderer/core/Transform';
+import Vector4 from '../../renderer/core/Vector4';
+import Vector2 from '../../renderer/core/Vector2';
 import { vec4 } from 'gl-matrix';
 
-export class WebGLUtils {
+export class ArtboardUtils {
   public static project2DReference(
     out: Vector3,
     x: number,
