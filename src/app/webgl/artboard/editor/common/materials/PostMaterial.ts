@@ -1,15 +1,15 @@
 /**
  * Created by mdavids on 26/02/2019.
  */
-import Material from '../../../renderer/core/Material';
-import Vector2 from '../../../renderer/core/Vector2';
-import Renderer from '../../../renderer/core/Renderer';
-import ITexture from '../../../renderer/core/ITexture';
-import Camera from '../../../renderer/core/Camera';
-import Renderable from '../../../renderer/core/Renderable';
-import Clock from '../../../common/Clock';
-import Texture2D from '../../../renderer/core/Texture2D';
-import Shader from '../../../renderer/core/Shader';
+import Material from '../../../../renderer/core/Material';
+import Vector2 from '../../../../renderer/core/Vector2';
+import Renderer from '../../../../renderer/core/Renderer';
+import ITexture from '../../../../renderer/core/ITexture';
+import Camera from '../../../../renderer/core/Camera';
+import Renderable from '../../../../renderer/core/Renderable';
+import Clock from '../../../../common/Clock';
+import Texture2D from '../../../../renderer/core/Texture2D';
+import Shader from '../../../../renderer/core/Shader';
 
 export class PostMaterial extends Material {
   public texLUT: Texture2D;
