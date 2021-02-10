@@ -1,37 +1,49 @@
-import {MainScene} from "./scenes/MainScene";
 import { WebGLApp } from '../../common/WebGLApp';
+import Project from "./core/Project";
+import ArtboardFactory from "./core/ArtboardFactory";
+import ArtboardContext from "./core/ArtboardContext";
+import ArtboardDefFactory from "./core/model/ArtboardDefFactory";
 
 /**
  * Created by mdavids on 10/02/2021.
  */
 export class EditorWebGLApp extends WebGLApp {
-  protected _scene: MainScene;
+  protected _context: ArtboardContext;
+  protected _project: Project;
 
   protected onReady(): void {
+    const gl: WebGLRenderingContext = this._renderer.context;
+    if (!gl.getExtension('OES_standard_derivatives')) {
+      throw new Error('OES_standard_derivatives unavailable');
+    }
+
     this._renderer.setClearColor(0, 0, 0, 1);
     this._renderer.clear();
 
-    this._scene = new MainScene(this._renderer);
-
-    const width = Math.max(this._canvasParent.offsetWidth, 1) * this._retinaMultiplier;
-    const height = Math.max(this._canvasParent.offsetHeight, 1) * this._retinaMultiplier;
-    this._scene.resize(width, height);
+    this._context = ArtboardFactory.CreateContext();
+    
+    ArtboardFactory.CreateProject(
+      this._context,
+      ArtboardDefFactory.CreateEmptyProjectDef(),
+    ).then((project) => {
+      this._project = project;
+    });
   }
 
   protected onUpdate(): void {
-    this._scene.update();
+    
   }
 
   protected onRender(): void {
-    this._scene.draw();
+    
   }
 
   protected onResize(): void {
-    this._scene.resize(this.canvas.width, this.canvas.height);
+    
   }
 
   protected onDestruct(): void {
-    this._scene.destruct();
-    this._scene = null;
+    this._project.destruct();
+    this._project = null;
   }
 }

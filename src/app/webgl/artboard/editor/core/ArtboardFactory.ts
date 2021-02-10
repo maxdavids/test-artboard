@@ -31,10 +31,10 @@ export default class ArtboardFactory {
         return project;
     }
 
-    public static CreateArtboardContext( assetLoader?: AssetsLoader ): ArtboardContext {
+    public static CreateContext( assetLoader?: AssetsLoader ): ArtboardContext {
         const context: ArtboardContext = new ArtboardContext();
         const assetsLoader = assetLoader ? assetLoader : this.CreateAssetsLoader();
-        context.setAssetsLoader( assetsLoader );
+        context.assetsLoader = assetsLoader;
         return context;
     }
 
