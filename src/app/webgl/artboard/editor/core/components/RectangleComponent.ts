@@ -48,14 +48,12 @@ export default class ImageComponent implements IComponent {
     }
 
     public serialize(): RectangleComponentDef {
-        let component = {
+        return {
             id: this._id,
             class: this._class,
             width: this._width,
             height: this._height,
         };
-
-        return component;
     }
 
     public async clone( newOwner: ArtboardObject = null ): Promise<IComponent> {
@@ -77,8 +75,8 @@ export default class ImageComponent implements IComponent {
         return this._width;
     }
 
-    public update( elapsedTime: number ): void {
-
+    public update(): void {
+        this._renderable.draw(this._context.camera);
     }
 
     public onAdded(): void {

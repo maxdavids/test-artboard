@@ -7,6 +7,7 @@ import { ArtboardObjectDef, Class } from './model/ArtboardDef';
 import ArtboardFactory from './ArtboardFactory';
 import Attributes from './Attributes';
 import ArtboardContext from "./ArtboardContext";
+import TransformComponent from "./components/TransformComponent";
 
 export default class ArtboardObject implements ISerializable {
 
@@ -16,28 +17,23 @@ export default class ArtboardObject implements ISerializable {
     protected _id: string;
 
     protected _components: IComponent[];
-    protected _objects: ArtboardObject[];
+    protected _children: ArtboardObject[];
 
-    protected _lastUpdateTime: number = 0;
-
-    public attributes: Attributes;
+    protected _transform: TransformComponent;
 
     constructor(artboardObjectDef: ArtboardObjectDef ) {
         this._class = artboardObjectDef.class;
         this._id = artboardObjectDef.id;
         this._components = [];
-        this._objects = [];
-
-        this.attributes = artboardObjectDef.attributes;
+        this._children = [];
     }
 
     public serialize(): ArtboardObjectDef {
         return {
             id: this._id,
             class: this._class,
-            attributes: this.attributes,
             components: this._components.map(( component: IComponent ) => component.serialize() ),
-            objects: this._objects.map(( object: ArtboardObject ) => object.serialize() )
+            objects: this._children.map(( object: ArtboardObject ) => object.serialize() )
         }
     }
 
@@ -50,12 +46,8 @@ export default class ArtboardObject implements ISerializable {
         return this._class;
     }
 
-    public getAttributes(): Attributes {
-        return this.attributes;
-    }
-
-    public setAttributes( attributes: Attributes ): void {
-        this.attributes = { ...this.attributes, ...attributes };
+    public get transform(): TransformComponent {
+        return this._transform;
     }
 
     public getComponentsByClass( clazz: Class ): IComponent[] {
@@ -112,11 +104,11 @@ export default class ArtboardObject implements ISerializable {
     }
 
     public getChildren(): ArtboardObject[] {
-        return this._objects;
+        return this._children;
     }
 
     public getChildAt( index: number ): ArtboardObject {
-        return this._objects[index];
+        return this._children[index];
     }
 
     public getChildById( objectId: string ): ArtboardObject {
@@ -124,7 +116,7 @@ export default class ArtboardObject implements ISerializable {
             return this;
         }
 
-        for ( const object of this._objects ) {
+        for ( const object of this._children ) {
             const foundObject = object.getChildById( objectId );
             if ( foundObject ) {
                 return foundObject;
@@ -135,14 +127,14 @@ export default class ArtboardObject implements ISerializable {
     }
 
     public addChild( object: ArtboardObject ): void {
-        this._objects.push( object );
+        this._children.push( object );
     }
 
     public removeChild( object: ArtboardObject ): boolean {
-        const index: number = this._objects.indexOf( object );
+        const index: number = this._children.indexOf( object );
 
         if ( index >= 0 ) {
-            this._objects.splice( index, 1 );
+            this._children.splice( index, 1 );
             return true;
         }
 
@@ -150,26 +142,24 @@ export default class ArtboardObject implements ISerializable {
     }
 
     public getChildIndex( object: ArtboardObject ) {
-        return this._objects.indexOf( object );
+        return this._children.indexOf( object );
     }
 
-    public updateComponents( globalElapsedMillis: number ): void {
-        for ( const component of this._components ) {
-            component.update( globalElapsedMillis );
-        }
+    public updateComponents(): void {
+        this._components.forEach((component) => {
+            component.update();
+        });
     }
 
-    public updateChildren( elapsedLocalTime: number ): void {
-        for ( const child of this._objects ) {
-            child.update( elapsedLocalTime );
-        }
+    public updateChildren(): void {
+        this._children.forEach((child) => {
+            child.update();
+        });
     }
 
-    public update( globalElapsedMillis: number ): void {
-        this._lastUpdateTime = globalElapsedMillis;
-
-        this.updateComponents( globalElapsedMillis );
-        this.updateChildren( globalElapsedMillis );
+    public update(): void {
+        this.updateComponents();
+        this.updateChildren();
     }
 
     public destruct(): void {

@@ -34,8 +34,8 @@ export default class Project {
         this._scene = value;
     }
 
-    public update( globalElapsedMillis: number ): void {
-        this._scene.update( globalElapsedMillis );
+    public update(): void {
+        this._scene.update();
     }
 
     public get id(): string {

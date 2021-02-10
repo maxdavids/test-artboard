@@ -14,7 +14,7 @@ interface IComponent extends ISerializable {
     
     load(): Promise<void>;
     clone(newOwner:ArtboardObject): Promise<IComponent>;
-    update(deltaTime:number):void;
+    update():void;
 
     onAdded():void;
     onRemoved():void;

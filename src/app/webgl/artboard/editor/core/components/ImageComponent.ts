@@ -8,11 +8,7 @@ import AssetsLoader from "../AssetsLoader";
 import { ImageComponentDef, Class, ComponentDef } from '../model/ArtboardDef';
 import IComponent from "./IComponent";
 import ArtboardFactory from '../ArtboardFactory';
-
-// We are using gifuct-js that is no a module, it exposes GIF as a global
-import  "./gif/gifuct-js.min.js";
 import ArtboardContext from '../ArtboardContext';
-declare var GIF: any; // tslint:disable-line:no-any
 
 export default class ImageComponent extends PIXI.Container implements IDisplayable {
 
@@ -142,11 +138,8 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
         const extensionIndex: number = this._src.lastIndexOf( "." );
         const extension: string = this._src.substr( extensionIndex + 1 ).toLowerCase();
 
-        if ( extension === "gif" ) {
-            this.buildGifFrames( content );
-        } else {
-            this._frames.push( content.texture );
-        }
+        this._frames.push( content.texture );
+
         if ( this._frames.length > 0 ) {
             this._canAnimate = this._frames.length > 1;
 
@@ -195,17 +188,9 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
         this._isEnabled = false;
     }
 
-    public update( elapsedTime: number ): void {
+    public update(): void {
         if ( this._isEnabled && this._canAnimate ) {
             this._sprite.texture = this._frames[this._currentFrameIndex];
-
-            const nextFrameIndex: number = Math.floor(( this._frames.length - 1 ) * ( elapsedTime / this._totalAnimTime ) );
-
-            if ( this._canLoop ) {
-                this._currentFrameIndex = nextFrameIndex % this._frames.length;
-            } else {
-                this._currentFrameIndex = Math.min( nextFrameIndex, this._frames.length - 1 );
-            }
         }
     }
 
@@ -219,50 +204,5 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
 
     public destruct(): void {
       // TODO: Implement
-    }
-
-    private buildGifFrames( content: any ): void {
-        const gif = new GIF( content );
-        const gifFrames = gif.decompressFrames( true );
-
-        if ( gifFrames.length <= 0 ) {
-            return;
-        }
-
-        const dims = gifFrames[0].dims;
-
-        this._frameDelay = gifFrames[0].delay;
-        this._totalAnimTime = this._frameDelay * gifFrames.length;
-
-        const canvasAcc: HTMLCanvasElement = document.createElement( 'canvas' );
-        canvasAcc.width = dims.width;
-        canvasAcc.height = dims.height;
-
-        const context2DAcc: CanvasRenderingContext2D = canvasAcc.getContext( '2d' );
-
-        const canvasFrame: HTMLCanvasElement = document.createElement( 'canvas' );
-        canvasFrame.width = dims.width;
-        canvasFrame.height = dims.height;
-
-        const context2DFrame: CanvasRenderingContext2D = canvasFrame.getContext( '2d' );
-        const frameImageData: ImageData = context2DFrame.createImageData( dims.width, dims.height );
-
-        let canvas: HTMLCanvasElement;
-        let context2D: CanvasRenderingContext2D;
-
-        for ( const gifFrame of gifFrames) {
-            frameImageData.data.set( gifFrame.patch );
-            context2DFrame.putImageData( frameImageData, 0, 0 );
-            context2DAcc.drawImage( canvasFrame, dims.left, dims.top );
-
-            canvas = document.createElement( 'canvas' );
-            canvas.width = dims.width;
-            canvas.height = dims.height;
-
-            context2D = canvas.getContext( '2d' );
-            context2D.drawImage( canvasAcc, dims.left, dims.top );
-
-            this._frames.push( PIXI.Texture.fromCanvas( canvas ) );
-        }
     }
 }

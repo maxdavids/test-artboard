@@ -11,7 +11,9 @@ export const DEF_VERSION: string = DefVersion.V01;
 export enum Class {
     Project = 'project',
     ArtboardObject = 'artboard-object',
+    TransformComponent = 'transform',
     ImageComponent = 'image',
+    RectangleComponent = 'rectangle',
 }
 
 export interface ProjectDef {
@@ -24,22 +26,21 @@ export interface ProjectDef {
 export interface ArtboardObjectDef {
     id: string;
     class: Class;
-    attributes: AttributesDef;
     components: ComponentDef[];
     objects: ArtboardObjectDef[];
 }
 
-export interface AttributesDef {
+export interface ComponentDef {
+    class: Class;
+}
+
+export interface TransformComponentDef extends ComponentDef {
+    id: string;
     x: number;
     y: number;
     scaleX: number;
     scaleY: number;
-    rotation: number;  // Radians
-    alpha: number;     // [0..1]
-}
-
-export interface ComponentDef {
-    class: Class;
+    rotation: number;
 }
 
 export interface RectangleComponentDef extends ComponentDef {

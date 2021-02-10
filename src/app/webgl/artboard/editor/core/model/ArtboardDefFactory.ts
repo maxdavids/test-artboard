@@ -4,7 +4,7 @@ import
     ProjectDef,
     ArtboardObjectDef,
     ImageComponentDef,
-    AttributesDef,
+    TransformComponentDef,
     DEF_VERSION,
 } from "./ArtboardDef";
 
@@ -25,36 +25,35 @@ export default class ArtboardDefFactory {
         return {
             id: uuidv4(),
             class: Class.ArtboardObject,
-            attributes: {
-                x: 0,
-                y: 0,
-                scaleX: 1,
-                scaleY: 1,
-                rotation: 0,
-                alpha: 1
-            },
-            components: [],
+            components: [
+                ArtboardDefFactory.CreateTransformComponentDef()
+            ],
             objects: []
         };
     }
 
-    public static CreateImageObjectDef( x: number, y: number, assetId: string, assetUrl: string ): ArtboardObjectDef {
+    public static CreateImageObjectDef( assetId: string, assetUrl: string ): ArtboardObjectDef {
         return {
             id: uuidv4(),
             class: Class.ArtboardObject,
-            attributes: {
-                x: x,
-                y: y,
-                scaleX: 1,
-                scaleY: 1,
-                rotation: 0,
-                alpha: 1
-            },
             components: [
+                ArtboardDefFactory.CreateTransformComponentDef(),
                 ArtboardDefFactory.CreateImageComponentDef( assetId, assetUrl )
             ],
             objects: []
         };
+    }
+
+    public static CreateTransformComponentDef(): TransformComponentDef {
+        return {
+            id: uuidv4(),
+            class: Class.TransformComponent,
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            rotation: 0,
+        }
     }
 
     public static CreateImageComponentDef( id: string, url: string ): ImageComponentDef {
