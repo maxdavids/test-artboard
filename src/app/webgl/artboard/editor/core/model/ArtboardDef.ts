@@ -42,6 +42,13 @@ export interface ComponentDef {
     class: Class;
 }
 
+export interface RectangleComponentDef extends ComponentDef {
+    id: string;
+    class: Class;
+    width: number;
+    height: number;
+}
+
 export interface ImageComponentDef extends ComponentDef {
     id: string;
     class: Class;
