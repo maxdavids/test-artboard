@@ -1,6 +1,5 @@
 import Vector3 from './Vector3';
 import Quaternion from './Quaternion';
-import Spherical from './Spherical';
 import { mat4, vec3 } from 'gl-matrix';
 
 /**
@@ -113,18 +112,6 @@ class Transform {
 
     this._isDirty = true;
     this._isDirtyInverse = true;
-  }
-
-  public setFromSpherical(sphericalPos: Spherical): void {
-    const quatInverse: Quaternion = new Quaternion();
-    quatInverse.setFromUnitVectors(new Vector3(0, 1, 0), new Vector3(0, 1, 0));
-    quatInverse.invert();
-
-    const offset: Vector3 = new Vector3();
-    offset.setFromSpherical(sphericalPos);
-    offset.applyQuaternion(quatInverse);
-
-    this.setPosition(offset);
   }
 
   public getMatrix(): Float32Array {

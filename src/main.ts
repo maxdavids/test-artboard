@@ -1,7 +1,7 @@
-import { WebGLRoot } from "./app/webgl/artboard/WebGLRoot";
+import { EditorWebGLApp } from "./app/webgl/artboard/editor/EditorWebGLApp";
 
 setTimeout(() => {
-  const root:WebGLRoot = new WebGLRoot();
+  const root:EditorWebGLApp = new EditorWebGLApp();
   root.init({
     canvas: document.getElementById('main-canvas') as HTMLCanvasElement,
     onError: () => console.log('error initializing webgl root'),

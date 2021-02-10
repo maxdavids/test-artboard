@@ -5,7 +5,6 @@
 import IComponent from "./components/IComponent";
 import { ArtboardObjectDef, Class } from './model/ArtboardDef';
 import ArtboardFactory from './ArtboardFactory';
-import Attributes from './Attributes';
 import ArtboardContext from "./ArtboardContext";
 import TransformComponent from "./components/TransformComponent";
 
@@ -47,6 +46,10 @@ export default class ArtboardObject implements ISerializable {
     }
 
     public get transform(): TransformComponent {
+        if (!this._transform) {
+            this._transform = <TransformComponent>this.getComponentByClass(Class.TransformComponent);
+        }
+
         return this._transform;
     }
 
