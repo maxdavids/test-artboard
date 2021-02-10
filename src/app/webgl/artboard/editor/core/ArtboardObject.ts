@@ -3,7 +3,6 @@
  */
 
 import IComponent from "./components/IComponent";
-import IDisplayable from "./components/IDisplayable";
 import { ArtboardObjectDef, Class } from './model/ArtboardDef';
 import ArtboardFactory from './ArtboardFactory';
 import Attributes from './Attributes';
@@ -80,24 +79,11 @@ export default class ArtboardObject implements ISerializable {
         return null;
     }
 
-    /**
-     * Type Guard because TypeScript
-     */
-    protected isDisplayable( component: IComponent ): component is IDisplayable {
-        return ( component as any ).getDisplayObject !== undefined; // tslint:disable-line:no-any
-    }
-
     public addComponent( component: IComponent ): void {
-        // components are ordered by priority
         let atIndex: number = -1;
-        let lastDisplayable: IDisplayable;
 
         const length: number = this._components.length;
         for ( let i: number = 0; i < length; i++ ) {
-            if ( this.isDisplayable( this._components[i] ) ) {
-                lastDisplayable = this._components[i] as IDisplayable;
-            }
-
             if ( component.priority < this._components[i].priority ) {
                 atIndex = i;
                 break;
@@ -106,7 +92,6 @@ export default class ArtboardObject implements ISerializable {
 
         if ( atIndex < 0 ) {
             this._components.push( component );
-
         } else {
             this._components.splice( atIndex, 0, component );
         }
@@ -126,25 +111,21 @@ export default class ArtboardObject implements ISerializable {
         return false;
     }
 
-    public getArtboardObjects(): ArtboardObject[] {
+    public getChildren(): ArtboardObject[] {
         return this._objects;
     }
 
-    public getArtboardObjectsQty(): number {
-        return this._objects.length;
-    }
-
-    public getArtboardObjectAt( index: number ): ArtboardObject {
+    public getChildAt( index: number ): ArtboardObject {
         return this._objects[index];
     }
 
-    public getObjectById( objectId: string ): ArtboardObject {
+    public getChildById( objectId: string ): ArtboardObject {
         if ( this._id === objectId ) {
             return this;
         }
 
         for ( const object of this._objects ) {
-            const foundObject = object.getObjectById( objectId );
+            const foundObject = object.getChildById( objectId );
             if ( foundObject ) {
                 return foundObject;
             }
@@ -153,11 +134,11 @@ export default class ArtboardObject implements ISerializable {
         return undefined;
     }
 
-    public addArtboardObject( object: ArtboardObject ): void {
+    public addChild( object: ArtboardObject ): void {
         this._objects.push( object );
     }
 
-    public removeArtboardObject( object: ArtboardObject ): boolean {
+    public removeChild( object: ArtboardObject ): boolean {
         const index: number = this._objects.indexOf( object );
 
         if ( index >= 0 ) {
@@ -168,15 +149,7 @@ export default class ArtboardObject implements ISerializable {
         return false;
     }
 
-    public setObjectIndex( object: ArtboardObject, newIndex: number ): void {
-        const oldIndex: number = this.getObjectIndex( object );
-        if ( oldIndex >= 0 && newIndex >= 0 && newIndex < this._objects.length && oldIndex !== newIndex ) {
-            this._objects.splice( oldIndex, 1 );
-            this._objects.splice( newIndex, 0, object );
-        }
-    }
-
-    public getObjectIndex( object: ArtboardObject ) {
+    public getChildIndex( object: ArtboardObject ) {
         return this._objects.indexOf( object );
     }
 

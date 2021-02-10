@@ -13,9 +13,7 @@ interface IComponent extends ISerializable {
     getClass(): Class;
     
     load(): Promise<void>;
-
     clone(newOwner:ArtboardObject): Promise<IComponent>;
-
     update(deltaTime:number):void;
 
     onAdded():void;

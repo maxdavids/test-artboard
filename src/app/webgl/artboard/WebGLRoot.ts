@@ -11,7 +11,6 @@ export class WebGLRoot {
   public canvas: HTMLCanvasElement;
   protected _canvasParent: HTMLElement;
   protected _autoResize: boolean;
-  protected _manualResizeUpdate: boolean;
   protected _resizeHandler: any;
 
   protected _updateFrameID: number = 0;
@@ -46,7 +45,6 @@ export class WebGLRoot {
       this._autoResize = false;
     }
 
-    this._manualResizeUpdate = false;
     this.canvas = this.prepareCanvas(canvas);
 
     this._onError = onError;

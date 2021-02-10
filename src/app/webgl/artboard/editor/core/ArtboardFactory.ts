@@ -48,8 +48,7 @@ export default class ArtboardFactory {
 
         for ( const objectDef of artboardObjectDef.objects ) {
             const child: ArtboardObject = await ArtboardFactory.CreateArtboardObject( context, objectDef );
-            artboardObject.addArtboardObject( child );
-
+            artboardObject.addChild( child );
         }
 
         return artboardObject;
