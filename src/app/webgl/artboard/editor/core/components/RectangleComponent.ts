@@ -6,6 +6,10 @@ import { Class, ComponentDef, RectangleComponentDef } from '../model/ArtboardDef
 import IComponent from "./IComponent";
 import ArtboardFactory from '../ArtboardFactory';
 import ArtboardContext from '../ArtboardContext';
+import RectangleMaterial from "../materials/RectangleMaterial";
+import Renderable from "../../../../lib/renderer/core/Renderable";
+import Material from "../../../../lib/renderer/core/Material";
+import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
 
 export default class ImageComponent implements IComponent {
 
@@ -18,6 +22,8 @@ export default class ImageComponent implements IComponent {
     protected _context: ArtboardContext;
     protected _width: number = 0;
     protected _height: number = 0;
+
+    protected _renderable: Renderable;
 
     constructor( context: ArtboardContext, owner: ArtboardObject, def: RectangleComponentDef ) {
         this._context = context;
@@ -33,6 +39,10 @@ export default class ImageComponent implements IComponent {
 
     public async load(): Promise<void> {
         return new Promise<void>(( resolve, reject ) => {
+            const material: Material = RectangleMaterial.Create(this._context.renderer);
+            const mesh: MeshQuad = new MeshQuad(this._context.renderer);
+            this._renderable = new Renderable(this._context.renderer, mesh, material);
+
             resolve();
         });
     }

@@ -7,7 +7,7 @@ import Vector2 from '../core/Vector2';
 import Camera from '../core/Camera';
 import Renderable from '../core/Renderable';
 import Vector4 from '../core/Vector4';
-import Clock from '../../common/Clock';
+import Clock from '../../../common/Clock';
 import Texture2D from '../core/Texture2D';
 
 /**

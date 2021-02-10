@@ -15,8 +15,6 @@ class Renderable {
   protected _material: Material;
 
   constructor(renderer: Renderer, mesh: Mesh = null, material: Material = null) {
-    // super();
-
     this._renderer = renderer;
 
     this._mesh = mesh;

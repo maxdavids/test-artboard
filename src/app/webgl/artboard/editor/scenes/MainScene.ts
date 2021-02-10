@@ -1,4 +1,4 @@
-import Renderer from '../../../renderer/core/Renderer';
+import Renderer from '../../../lib/renderer/core/Renderer';
 import Clock from '../../../common/Clock';
 
 /**

@@ -5,7 +5,7 @@ import Renderable from '../core/Renderable';
 import Texture2D from '../core/Texture2D';
 import Vector2 from '../core/Vector2';
 import ShaderSharpen from './shaders/ShaderSharpen';
-import Clock from '../../common/Clock';
+import Clock from '../../../common/Clock';
 import ITexture from '../core/ITexture';
 
 /**
