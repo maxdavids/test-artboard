@@ -9,7 +9,6 @@ import Vector3 from './Vector3';
 
 /**
  * Created by mdavids on 19/04/2016.
- * Based on the work by johan
  */
 class Renderer /*extends Destructible*/ {
   public context: WebGLRenderingContext;
@@ -30,8 +29,6 @@ class Renderer /*extends Destructible*/ {
 
   public renderWidth: number;
   public renderHeight: number;
-  private _oldViewportX: number;
-  private _oldViewportY: number;
 
   public currentRenderTarget: IRenderTarget;
 
@@ -214,11 +211,7 @@ class Renderer /*extends Destructible*/ {
   }
 
   private setViewport(): void {
-    // if (this._oldViewportX !== this.renderWidth || this._oldViewportY !== this.renderHeight) {
     this.context.viewport(0, 0, this.renderWidth, this.renderHeight);
-    this._oldViewportX = this.renderWidth;
-    this._oldViewportY = this.renderHeight;
-    // }
   }
 
   public handleCanvasResize(): void {

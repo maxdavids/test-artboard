@@ -4,9 +4,9 @@
 import ArtboardObject from "../ArtboardObject";
 import { Class, ComponentDef, RectangleComponentDef } from '../model/ArtboardDef';
 import IComponent from "./IComponent";
-import ArtboardFactory from '../ArtboardFactory';
-import ArtboardContext from '../ArtboardContext';
-import RectangleMaterial from "../materials/RectangleMaterial";
+import Factory from '../Factory';
+import Context from '../Context';
+import RectangleMaterial from "./materials/RectangleMaterial";
 import Renderable from "../../../../lib/renderer/core/Renderable";
 import Material from "../../../../lib/renderer/core/Material";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
@@ -19,13 +19,13 @@ export default class ImageComponent implements IComponent {
     readonly _id: string;
     readonly _class: Class;
 
-    protected _context: ArtboardContext;
+    protected _context: Context;
     protected _width: number = 0;
     protected _height: number = 0;
 
     protected _renderable: Renderable;
 
-    constructor( context: ArtboardContext, owner: ArtboardObject, def: RectangleComponentDef ) {
+    constructor( context: Context, owner: ArtboardObject, def: RectangleComponentDef ) {
         this._context = context;
         this._owner = owner;
 
@@ -60,7 +60,7 @@ export default class ImageComponent implements IComponent {
         const def: ComponentDef = this.serialize();
         const owner: ArtboardObject = newOwner ? newOwner : this._owner;
 
-        return ArtboardFactory.CreateComponent( this._context, owner, def );
+        return Factory.CreateComponent( this._context, owner, def );
     }
 
     public getClass(): Class {

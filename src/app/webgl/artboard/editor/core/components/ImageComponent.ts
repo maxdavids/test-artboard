@@ -7,8 +7,8 @@ import ArtboardObject from "../ArtboardObject";
 import AssetsLoader from "../AssetsLoader";
 import { ImageComponentDef, Class, ComponentDef } from '../model/ArtboardDef';
 import IComponent from "./IComponent";
-import ArtboardFactory from '../ArtboardFactory';
-import ArtboardContext from '../ArtboardContext';
+import Factory from '../Factory';
+import Context from '../Context';
 
 export default class ImageComponent extends PIXI.Container implements IDisplayable {
 
@@ -21,7 +21,7 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
     readonly _class: Class; //'image' | 'background';
     protected _src: string;
 
-    protected _context: ArtboardContext;
+    protected _context: Context;
 
     protected _sprite: PIXI.Sprite;
     protected _frames: PIXI.Texture[] = [];
@@ -64,7 +64,7 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
         }
         `.split( '\n' ).reduce(( c, a ) => c + a.trim() + '\n' );
 
-    constructor( context: ArtboardContext, owner: ArtboardObject, def: ImageComponentDef ) {
+    constructor( context: Context, owner: ArtboardObject, def: ImageComponentDef ) {
         super();
 
         this._context = context;
@@ -124,7 +124,7 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
         const def: ComponentDef = this.serialize();
         const owner: ArtboardObject = newOwner ? newOwner : this._owner;
 
-        return ArtboardFactory.CreateComponent( this._context, owner, def );
+        return Factory.CreateComponent( this._context, owner, def );
     }
 
     public getSrc = (): string => {

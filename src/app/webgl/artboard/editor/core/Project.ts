@@ -1,15 +1,15 @@
-import { ProjectDef, Class, DEF_VERSION } from './model/ArtboardDef';
+import { ProjectDef, Class, CURRENT_VERSION } from './model/ArtboardDef';
 import ArtboardObject from './ArtboardObject';
-import ArtboardContext from './ArtboardContext';
+import Context from './Context';
 
 export default class Project {
     readonly _id: string;
     readonly _class: Class;
 
-    protected _context: ArtboardContext;
+    protected _context: Context;
     protected _scene: ArtboardObject;
 
-    constructor( context: ArtboardContext, def: ProjectDef ) {
+    constructor( context: Context, def: ProjectDef ) {
         this._context = context;
         this._id = def.id;
         this._class = def.class;
@@ -21,7 +21,7 @@ export default class Project {
         return {
             id: this._id,
             class: this._class,
-            version: DEF_VERSION,
+            version: CURRENT_VERSION,
             scene: this._scene.serialize(),
         };
     }

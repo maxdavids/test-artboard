@@ -5,7 +5,8 @@ import
     ArtboardObjectDef,
     ImageComponentDef,
     TransformComponentDef,
-    DEF_VERSION,
+    CURRENT_VERSION,
+    RectangleComponentDef,
 } from "./ArtboardDef";
 
 import { v4 as uuidv4 } from 'uuid';
@@ -14,10 +15,10 @@ export default class ArtboardDefFactory {
 
     public static CreateEmptyProjectDef(): ProjectDef {
         return {
-            "version": DEF_VERSION,
-            "id": uuidv4(),
-            "class": Class.Project,
-            "scene": this.CreateEmptyArtboardObject()
+            version: CURRENT_VERSION,
+            id: uuidv4(),
+            class: Class.Project,
+            scene: this.CreateEmptyArtboardObject()
         }
     }
 
@@ -32,13 +33,25 @@ export default class ArtboardDefFactory {
         };
     }
 
-    public static CreateImageObjectDef( assetId: string, assetUrl: string ): ArtboardObjectDef {
+    public static CreateRectangleObjectDef(width: number, height: number): ArtboardObjectDef {
         return {
             id: uuidv4(),
             class: Class.ArtboardObject,
             components: [
                 ArtboardDefFactory.CreateTransformComponentDef(),
-                ArtboardDefFactory.CreateImageComponentDef( assetId, assetUrl )
+                ArtboardDefFactory.CreateRectangleComponentDef(width, height),
+            ],
+            objects: []
+        }
+    }
+
+    public static CreateImageObjectDef(assetId: string, assetUrl: string): ArtboardObjectDef {
+        return {
+            id: uuidv4(),
+            class: Class.ArtboardObject,
+            components: [
+                ArtboardDefFactory.CreateTransformComponentDef(),
+                ArtboardDefFactory.CreateImageComponentDef(assetId, assetUrl)
             ],
             objects: []
         };
@@ -56,7 +69,16 @@ export default class ArtboardDefFactory {
         }
     }
 
-    public static CreateImageComponentDef( id: string, url: string ): ImageComponentDef {
+    public static CreateRectangleComponentDef(width: number, height: number): RectangleComponentDef {
+        return {
+            id: uuidv4(),
+            class: Class.RectangleComponent,
+            width: width,
+            height: height
+        }
+    }
+
+    public static CreateImageComponentDef(id: string, url: string): ImageComponentDef {
         return {
             id: id,
             class: Class.ImageComponent,

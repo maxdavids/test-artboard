@@ -2,9 +2,9 @@
  * Created by mdavids on 09/02/2021.
  */
 
-import Material from "../../../../lib/renderer/core/Material";
-import Renderer from "../../../../lib/renderer/core/Renderer";
-import Shader from "../../../../lib/renderer/core/Shader";
+import Material from "../../../../../lib/renderer/core/Material";
+import Renderer from "../../../../../lib/renderer/core/Renderer";
+import Shader from "../../../../../lib/renderer/core/Shader";
 
 export default class RectangleMaterial {
 

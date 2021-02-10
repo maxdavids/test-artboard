@@ -2,11 +2,11 @@
  * Created by mdavids on 09/02/2021.
  */
 
-export enum DefVersion {
+export enum Version {
     V01 = "0.1"
 }
 
-export const DEF_VERSION: string = DefVersion.V01;
+export const CURRENT_VERSION: string = Version.V01;
 
 export enum Class {
     Project = 'project',

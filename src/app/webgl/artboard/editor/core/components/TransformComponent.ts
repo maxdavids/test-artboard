@@ -2,8 +2,8 @@ import { Class, TransformComponentDef, ComponentDef } from '../model/ArtboardDef
 import ArtboardObject from '../ArtboardObject';
 import Transform from '../../../../lib/renderer/core/Transform';
 import IComponent from './IComponent';
-import ArtboardContext from '../ArtboardContext';
-import ArtboardFactory from '../ArtboardFactory';
+import Context from '../Context';
+import Factory from '../Factory';
 
 export default class TransformComponent implements IComponent {
     public readonly priority: number = 0;
@@ -12,11 +12,11 @@ export default class TransformComponent implements IComponent {
     readonly _id: string;
     readonly _class: Class;
 
-    protected _context: ArtboardContext;
+    protected _context: Context;
     protected _localTransform: Transform;
     protected _globalTransform: Transform;
 
-    constructor( context: ArtboardContext, owner: ArtboardObject, def: TransformComponentDef ) {
+    constructor( context: Context, owner: ArtboardObject, def: TransformComponentDef ) {
         this._context = context;
         this._owner = owner;
 
@@ -57,7 +57,7 @@ export default class TransformComponent implements IComponent {
         const def: ComponentDef = this.serialize();
         const owner: ArtboardObject = newOwner ? newOwner : this._owner;
 
-        return ArtboardFactory.CreateComponent( this._context, owner, def );
+        return Factory.CreateComponent( this._context, owner, def );
     }
 
     public getClass(): Class {

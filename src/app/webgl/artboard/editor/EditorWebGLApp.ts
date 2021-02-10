@@ -1,14 +1,14 @@
 import { WebGLApp } from '../../common/WebGLApp';
 import Project from "./core/Project";
-import ArtboardFactory from "./core/ArtboardFactory";
-import ArtboardContext from "./core/ArtboardContext";
-import ArtboardDefFactory from "./core/model/ArtboardDefFactory";
+import Factory from "./core/Factory";
+import Context from "./core/Context";
+import { TestProjectJSON } from './TestProjectJSON';
 
 /**
  * Created by mdavids on 10/02/2021.
  */
 export class EditorWebGLApp extends WebGLApp {
-  protected _context: ArtboardContext;
+  protected _context: Context;
   protected _project: Project;
 
   protected onReady(): void {
@@ -20,11 +20,11 @@ export class EditorWebGLApp extends WebGLApp {
     this._renderer.setClearColor(0, 0, 0, 1);
     this._renderer.clear();
 
-    this._context = ArtboardFactory.CreateContext();
+    this._context = Factory.CreateContext();
     
-    ArtboardFactory.CreateProject(
+    Factory.CreateProject(
       this._context,
-      ArtboardDefFactory.CreateEmptyProjectDef(),
+      TestProjectJSON,
     ).then((project) => {
       this._project = project;
     });

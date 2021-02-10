@@ -4,13 +4,13 @@
 
 import IComponent from "./components/IComponent";
 import { ArtboardObjectDef, Class } from './model/ArtboardDef';
-import ArtboardFactory from './ArtboardFactory';
-import ArtboardContext from "./ArtboardContext";
+import Factory from './Factory';
+import Context from "./Context";
 import TransformComponent from "./components/TransformComponent";
 
 export default class ArtboardObject implements ISerializable {
 
-    protected _context: ArtboardContext;
+    protected _context: Context;
 
     readonly _class: Class;
     protected _id: string;
@@ -38,7 +38,7 @@ export default class ArtboardObject implements ISerializable {
 
     public clone(): Promise<ArtboardObject> {
         const def: ArtboardObjectDef = this.serialize();
-        return ArtboardFactory.CreateArtboardObject( this._context, def );
+        return Factory.CreateArtboardObject( this._context, def );
     }
 
     public getClass(): Class {
