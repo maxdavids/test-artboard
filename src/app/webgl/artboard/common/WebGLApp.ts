@@ -1,5 +1,5 @@
-import Renderer from '../lib/renderer/core/Renderer';
-import Clock from '../common/Clock';
+import Renderer from '../../lib/renderer/core/Renderer';
+import Clock from './Clock';
 
 /**
  * Created by mdavids on 02/01/2019.

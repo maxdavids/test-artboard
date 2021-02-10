@@ -1,4 +1,4 @@
-import { WebGLApp } from '../../common/WebGLApp';
+import { WebGLApp } from '../common/WebGLApp';
 import Project from "./core/Project";
 import Factory from "./core/Factory";
 import Context from "./core/Context";

@@ -7,7 +7,6 @@ import Vector2 from '../core/Vector2';
 import Camera from '../core/Camera';
 import Renderable from '../core/Renderable';
 import Vector4 from '../core/Vector4';
-import Clock from '../../../common/Clock';
 import Texture2D from '../core/Texture2D';
 
 /**
@@ -45,8 +44,6 @@ class MaterialBlit extends Material {
 
     this.setVector4('uColor', this.color);
     this.setVector2('uTexelSize', this._texelSize);
-
-    this.setFloat('uTime', Clock.globalTime);
 
     if (this.texture2) {
       const textureUniform: WebGLUniformLocation = this.getLoc('uTexture2');

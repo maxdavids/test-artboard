@@ -9,7 +9,6 @@ import Context from '../Context';
 import { Buffer } from '../Enumeratives';
 import RectangleMaterial from "./materials/RectangleMaterial";
 import Renderable from "../../../../lib/renderer/core/Renderable";
-import Material from "../../../../lib/renderer/core/Material";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
 import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
 
@@ -46,7 +45,7 @@ export default class ImageComponent implements IComponent {
         return new Promise<void>(( resolve, reject ) => {
             const mesh: MeshQuad = new MeshQuad(this._context.renderer);
             this._material = new RectangleMaterial(this._context.renderer);
-            this._renderable = new Renderable(this._context.renderer, mesh, material);
+            this._renderable = new Renderable(this._context.renderer, mesh, this._material);
 
             this._mainBuffer = this._context.getBuffer(Buffer.Main);
             this._indexBuffer = this._context.getBuffer(Buffer.Indexes);
