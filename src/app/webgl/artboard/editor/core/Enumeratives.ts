@@ -1,4 +1,4 @@
-export enum Buffers {
+export enum Buffer {
     Main = 'main',
     Indexes = 'indexes'
 }

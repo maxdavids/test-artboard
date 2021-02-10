@@ -6,10 +6,12 @@ import { Class, ComponentDef, RectangleComponentDef } from '../model/ArtboardDef
 import IComponent from "./IComponent";
 import Factory from '../Factory';
 import Context from '../Context';
+import { Buffer } from '../Enumeratives';
 import RectangleMaterial from "./materials/RectangleMaterial";
 import Renderable from "../../../../lib/renderer/core/Renderable";
 import Material from "../../../../lib/renderer/core/Material";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
+import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
 
 export default class ImageComponent implements IComponent {
 
@@ -23,6 +25,8 @@ export default class ImageComponent implements IComponent {
     protected _width: number = 0;
     protected _height: number = 0;
 
+    protected _mainBuffer: RenderTexture;
+    protected _indexBuffer: RenderTexture;
     protected _renderable: Renderable;
 
     constructor( context: Context, owner: ArtboardObject, def: RectangleComponentDef ) {
@@ -42,6 +46,9 @@ export default class ImageComponent implements IComponent {
             const material: Material = RectangleMaterial.Create(this._context.renderer);
             const mesh: MeshQuad = new MeshQuad(this._context.renderer);
             this._renderable = new Renderable(this._context.renderer, mesh, material);
+
+            this._mainBuffer = this._context.getBuffer(Buffer.Main);
+            this._indexBuffer = this._context.getBuffer(Buffer.Indexes);
 
             resolve();
         });
@@ -76,6 +83,10 @@ export default class ImageComponent implements IComponent {
     }
 
     public update(): void {
+        // Note: This is not ideal, renderables should be added to render lists
+        // to avoid state changes and to dynamically batch render objects
+        // but I do not have the time to code one.
+        this._context.renderer.setRenderTarget(this._mainBuffer);
         this._renderable.draw(this._context.camera);
     }
 

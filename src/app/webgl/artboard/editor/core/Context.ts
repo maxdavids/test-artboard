@@ -2,6 +2,7 @@ import Camera from '../../../lib/renderer/core/Camera';
 import Renderer from '../../../lib/renderer/core/Renderer';
 import RenderTexture from '../../../lib/renderer/core/RenderTexture';
 import AssetsLoader from './AssetsLoader';
+import ObjectIndexList from './ObjectIndexList';
 
 export default class Context {
     protected _renderer: Renderer;
@@ -9,6 +10,7 @@ export default class Context {
     protected _assetsLoader: AssetsLoader;
 
     protected _buffers: Map<string, RenderTexture> = new Map<string, RenderTexture>();
+    protected _indexList: ObjectIndexList = new ObjectIndexList();
 
     public addBuffer(id: string, buffer: RenderTexture): void {
         this._buffers.set(id, buffer);
@@ -16,6 +18,10 @@ export default class Context {
 
     public getBuffer(id: string): RenderTexture {
         return this._buffers.get(id);
+    }
+
+    public get indexList(): ObjectIndexList {
+        return this._indexList;
     }
 
     public set renderer( value: Renderer ) {

@@ -4,8 +4,7 @@ import { Class } from "../model/ArtboardDef";
 /**
  * Created by mdavids on 31/10/2017.
  */
-interface IComponent extends ISerializable {
-
+export default interface IComponent extends ISerializable {
     readonly priority: number;
     readonly _class: Class;
     readonly _owner: ArtboardObject;
@@ -21,4 +20,3 @@ interface IComponent extends ISerializable {
 
     destruct():void;
 }
-export default IComponent;
