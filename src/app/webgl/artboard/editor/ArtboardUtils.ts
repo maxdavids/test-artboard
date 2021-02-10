@@ -1,8 +1,8 @@
-import Camera from '../../../lib/renderer/core/Camera';
-import Vector3 from '../../../lib/renderer/core/Vector3';
-import Transform from '../../../lib/renderer/core/Transform';
-import Vector4 from '../../../lib/renderer/core/Vector4';
-import Vector2 from '../../../lib/renderer/core/Vector2';
+import Camera from '../../lib/renderer/core/Camera';
+import Vector3 from '../../lib/renderer/core/Vector3';
+import Transform from '../../lib/renderer/core/Transform';
+import Vector4 from '../../lib/renderer/core/Vector4';
+import Vector2 from '../../lib/renderer/core/Vector2';
 import { vec4 } from 'gl-matrix';
 
 export class ArtboardUtils {
