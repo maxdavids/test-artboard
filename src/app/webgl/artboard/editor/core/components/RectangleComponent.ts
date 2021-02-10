@@ -27,6 +27,7 @@ export default class ImageComponent implements IComponent {
 
     protected _mainBuffer: RenderTexture;
     protected _indexBuffer: RenderTexture;
+    protected _material: RectangleMaterial;
     protected _renderable: Renderable;
 
     constructor( context: Context, owner: ArtboardObject, def: RectangleComponentDef ) {
@@ -43,8 +44,8 @@ export default class ImageComponent implements IComponent {
 
     public async load(): Promise<void> {
         return new Promise<void>(( resolve, reject ) => {
-            const material: Material = RectangleMaterial.Create(this._context.renderer);
             const mesh: MeshQuad = new MeshQuad(this._context.renderer);
+            this._material = new RectangleMaterial(this._context.renderer);
             this._renderable = new Renderable(this._context.renderer, mesh, material);
 
             this._mainBuffer = this._context.getBuffer(Buffer.Main);
@@ -87,15 +88,22 @@ export default class ImageComponent implements IComponent {
         // to avoid state changes and to dynamically batch render objects
         // but I do not have the time to code one.
         this._context.renderer.setRenderTarget(this._mainBuffer);
+        this._material.indexMask = 0;
+        this._renderable.draw(this._context.camera);
+
+        this._context.renderer.setRenderTarget(this._indexBuffer);
+        this._material.indexMask = 1;
         this._renderable.draw(this._context.camera);
     }
 
     public onAdded(): void {
-
+        const index: number = this._context.indexList.addComponent(this);
+        this._material.index = index;
     }
 
     public onRemoved(): void {
-
+        this._context.indexList.removeComponent(this);
+        this._material.index = 0;
     }
 
     public destruct(): void {

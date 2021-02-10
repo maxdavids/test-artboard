@@ -20,15 +20,19 @@ export default class ObjectIndexList {
         return result;
     }
 
-    public addComponent(component: IComponent): void {
+    public addComponent(component: IComponent): number {
         const index: number = this.createIndex();
         this._indexMapping.set(index, component);
+
+        return index;
     }
 
-    public removeComponent(component: IComponent): void {
+    public removeComponent(component: IComponent): number {
         const index: number = this.getComponentIndex(component);
         this._indexMapping.delete(index);
         this._availableIndexes.push(index);
+
+        return index;
     }
 
     public getComponent(index: number): IComponent {
