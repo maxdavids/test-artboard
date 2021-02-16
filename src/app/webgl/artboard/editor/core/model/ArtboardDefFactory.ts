@@ -18,11 +18,11 @@ export default class ArtboardDefFactory {
             version: CURRENT_VERSION,
             id: uuidv4(),
             class: Class.Project,
-            scene: this.CreateEmptyArtboardObject()
+            scene: this.CreateEmptyArtboardObjectDef()
         }
     }
 
-    public static CreateEmptyArtboardObject(): ArtboardObjectDef {
+    public static CreateEmptyArtboardObjectDef(): ArtboardObjectDef {
         return {
             id: uuidv4(),
             class: Class.ArtboardObject,

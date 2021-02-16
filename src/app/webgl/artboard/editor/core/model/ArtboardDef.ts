@@ -9,6 +9,7 @@ export enum Version {
 export const CURRENT_VERSION: string = Version.V01;
 
 export enum Class {
+    Internal = 'internal',
     Project = 'project',
     ArtboardObject = 'artboard-object',
     TransformComponent = 'transform',
