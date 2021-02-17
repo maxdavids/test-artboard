@@ -1,5 +1,7 @@
 import RenderTexture from "../../../lib/renderer/core/RenderTexture";
 import Vector2 from "../../../lib/renderer/core/Vector2";
+import ArtboardObject from "../core/ArtboardObject";
+import IComponent from "../core/components/IComponent";
 import Context from "../core/Context";
 import { Buffer } from "../core/Enumeratives";
 
@@ -11,6 +13,8 @@ export default class EditorMouse {
 
     protected _isMouseDown: boolean = false;
     protected _isDragging: boolean = false;
+
+    protected _selectedObject: ArtboardObject = null;
 
     constructor(context: Context) {
         this._context = context;
@@ -32,8 +36,11 @@ export default class EditorMouse {
     private onMouseMove(event: any): void {
         this.updateMousePosition(event.clientX, event.clientY);
 
-        if (this._isMouseDown) {
+        if (this._isMouseDown && this._selectedObject !== null) {
             this._isDragging = true;
+
+            // TODO
+            this._selectedObject.transform.globalTransform.setPositionXYZ(0, 0, 0);
         }
 
         if (!this._isDragging) {
@@ -52,6 +59,16 @@ export default class EditorMouse {
     }
 
     private onMouseUp(event: any): void {
+        if (!this._isDragging) {
+            const index: number = this.getIndexAt(this._mousePosition.x, this._mousePosition.y);
+            this._selectedObject = null;
+
+            if (index > 0) {
+                const selectedComponent: IComponent = this._context.indexList.getComponent(index);
+                this._selectedObject = selectedComponent._owner;
+            }
+        }
+
         this._isMouseDown = false;
         this._isDragging = false;
     }
