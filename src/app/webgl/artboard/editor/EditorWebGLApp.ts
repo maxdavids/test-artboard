@@ -4,30 +4,17 @@ import Project from "./core/Project";
 import Factory from "./core/Factory";
 import Context from "./core/Context";
 import { TestProjectJSON } from './TestProjectJSON';
-import ArtboardObject from './core/ArtboardObject';
-import { Class, ProjectDef } from './core/model/ArtboardDef';
-import ArtboardDefFactory from './core/model/ArtboardDefFactory';
-import MouseComponent from './ui/components/MouseComponent';
+import EditorUI from './ui/EditorUI';
+import { Buffer } from './core/Enumeratives';
 
 /**
  * Created by mdavids on 10/02/2021.
  */
 export class EditorWebGLApp extends WebGLApp {
   protected _context: Context;
+
   protected _project: Project;
-
-  protected _mouseObject: ArtboardObject;
-
-  private static async CreateObjects(context: Context, projectDef: ProjectDef): Promise<any> {
-    const project: Project = await Factory.CreateProject(context, projectDef);
-    const mouseObject: ArtboardObject = await Factory.CreateArtboardObject(context, ArtboardDefFactory.CreateEmptyArtboardObjectDef());
-    mouseObject.addComponent(new MouseComponent(context, mouseObject));
-
-    return {
-      project: project,
-      mouse: mouseObject
-    }
-  }
+  protected _ui: EditorUI;
 
   protected onReady(): void {
     const gl: WebGLRenderingContext = this._renderer.context;
@@ -36,32 +23,30 @@ export class EditorWebGLApp extends WebGLApp {
     }
 
     this._renderer.setClearColor(0, 0, 0, 1);
-    this._renderer.clear();
-
     this._context = Factory.CreateContext();
     
-    EditorWebGLApp.CreateObjects(
-      this._context,
-      TestProjectJSON,
-    ).then((objects) => {
-      this._project = objects.project;
-      this._mouseObject = objects.mouse;
-    });
-  }
-
-  protected onUpdate(): void {
-    
+    Factory.CreateProject(this._context, TestProjectJSON)
+      .then((project) => {
+        this._project = project;
+        this._ui = new EditorUI(this._context);
+      });
   }
 
   protected onRender(): void {
+    // TODO Move to RenderingContext::clear()
+    this._renderer.setRenderTarget(this._context.getBuffer(Buffer.Main));
+    this._renderer.clear();
+
+    this._renderer.setRenderTarget(this._context.getBuffer(Buffer.Indexes));
+    this._renderer.clear();
+
     this._project.update();
   }
 
-  protected onResize(): void {
-    
-  }
-
   protected onDestruct(): void {
+    this._ui.destruct();
+    this._ui = null;
+
     this._project.destruct();
     this._project = null;
   }

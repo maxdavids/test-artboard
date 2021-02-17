@@ -13,8 +13,6 @@ export default class Project {
         this._context = context;
         this._id = def.id;
         this._class = def.class;
-
-        this._scene = undefined;
     }
 
     public serialize(): ProjectDef {

@@ -19,7 +19,7 @@ export default class Context {
     public getBuffer(id: string): RenderTexture {
         return this._buffers.get(id);
     }
-
+    
     public get indexList(): ObjectIndexList {
         return this._indexList;
     }
