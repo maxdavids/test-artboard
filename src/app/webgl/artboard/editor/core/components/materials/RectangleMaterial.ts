@@ -38,7 +38,7 @@ export default class RectangleMaterial extends Material {
         uniform vec4 uColor;
         
         void main(void) {
-            vec4 color = mix(uColor, vec4(uIndex), uIndexMask);
+            vec4 color = mix(uColor, vec4(uIndex / 255.0), uIndexMask);
             gl_FragColor = color;
         }
     `;

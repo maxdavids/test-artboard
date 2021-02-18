@@ -1,5 +1,7 @@
 import RenderTexture from "../../../lib/renderer/core/RenderTexture";
 import Vector2 from "../../../lib/renderer/core/Vector2";
+import Vector3 from "../../../lib/renderer/core/Vector3";
+import { ArtboardUtils } from "../ArtboardUtils";
 import ArtboardObject from "../core/ArtboardObject";
 import IComponent from "../core/components/IComponent";
 import Context from "../core/Context";
@@ -24,7 +26,7 @@ export default class EditorMouse {
     }
 
     public destruct(): void {
-        // TODO: Implement
+        // TODO
     }
 
     protected addEventListeners() {
@@ -41,7 +43,18 @@ export default class EditorMouse {
             this._isDragging = true;
 
             // TODO
-            this._selectedObject.transform.globalTransform.setPositionXYZ(0, 0, 0);
+            const result: Vector3 = new Vector3();
+            ArtboardUtils.project2DReference(
+                result,
+                this._mousePosition.x,
+                this._mousePosition.y,
+                this._context.camera.getTransform().position.z,
+                this._context.camera.vSize.x,
+                this._context.camera.vSize.y,
+                this._context.camera
+            );
+
+            this._selectedObject.transform.globalTransform.setPosition(result);
         }
 
         if (!this._isDragging) {

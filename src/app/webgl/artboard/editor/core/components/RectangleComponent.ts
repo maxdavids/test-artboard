@@ -11,6 +11,8 @@ import RectangleMaterial from "./materials/RectangleMaterial";
 import Renderable from "../../../../lib/renderer/core/Renderable";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
 import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
+import TransformComponent from "./TransformComponent";
+import Transform from "../../../../lib/renderer/core/Transform";
 
 export default class ImageComponent implements IComponent {
 
@@ -28,6 +30,10 @@ export default class ImageComponent implements IComponent {
     protected _indexBuffer: RenderTexture;
     protected _material: RectangleMaterial;
     protected _renderable: Renderable;
+    protected _transform: Transform;
+
+    protected _transformComponent: TransformComponent;
+    protected _globalTransform: Transform;
 
     constructor( context: Context, owner: ArtboardObject, def: RectangleComponentDef ) {
         this._context = context;
@@ -46,6 +52,7 @@ export default class ImageComponent implements IComponent {
             const mesh: MeshQuad = new MeshQuad(this._context.renderer);
             this._material = new RectangleMaterial(this._context.renderer);
             this._renderable = new Renderable(this._context.renderer, mesh, this._material);
+            this._transform = this._renderable.getTransform();
 
             this._mainBuffer = this._context.getBuffer(Buffer.Main);
             this._indexBuffer = this._context.getBuffer(Buffer.Indexes);
@@ -83,6 +90,8 @@ export default class ImageComponent implements IComponent {
     }
 
     public update(): void {
+        this._transform.setPosition(this._globalTransform.position);
+
         // Note: This is not ideal, renderables should be added to render lists
         // to avoid state changes and to dynamically batch render objects
         // but I do not have the time to code one.
@@ -98,6 +107,10 @@ export default class ImageComponent implements IComponent {
     public onAdded(): void {
         const index: number = this._context.indexList.addComponent(this);
         this._material.index = index;
+
+        this._transformComponent = <TransformComponent>this._owner.getComponentByClass(Class.TransformComponent);
+        this._globalTransform = this._transformComponent.globalTransform;
+        this._transform.setPosition(this._globalTransform.position);
     }
 
     public onRemoved(): void {
