@@ -1,11 +1,18 @@
 /**
- * Created by mdavids on 31/10/2017.
+ * Created by mdavids on 18/02/2021.
  */
 import ArtboardObject from "../ArtboardObject";
 import { ImageComponentDef, Class, ComponentDef } from '../model/ArtboardDef';
 import IComponent from "./IComponent";
 import Factory from '../Factory';
 import Context from '../Context';
+import MaterialTexture2D from "../../../../lib/renderer/materials/MaterialTexture2D";
+import Texture2DLoader from "../../../../lib/renderer/loader/Texture2DLoader";
+import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
+import Renderable from "../../../../lib/renderer/core/Renderable";
+import Transform from "../../../../lib/renderer/core/Transform";
+import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
+import { Buffer } from "../Enumeratives";
 
 export default class ImageComponent implements IComponent {
 
@@ -15,48 +22,19 @@ export default class ImageComponent implements IComponent {
     public readonly priority: number = 1000;
 
     readonly _id: string;
-    readonly _class: Class; //'image' | 'background';
+    readonly _class: Class;
     protected _src: string;
 
     protected _context: Context;
 
-    protected _canAnimate: boolean = false; // canAnimate is true when imageComponent has frames > 0
-    protected _canLoop: boolean = true;
+    protected _asset: Texture2DLoader;
+    protected _material: MaterialTexture2D;
+    protected _renderable: Renderable;
+    protected _transform: Transform;
+    protected _globalTransform: Transform;
 
-    protected _isEnabled: boolean = true;
-
-    protected _currentFrameIndex: number = 0;
-    protected _frameDelay: number = 0;
-    protected _totalAnimTime: number = 0;
-    protected _sharpening: string = `
-        precision mediump float;
-
-        uniform sampler2D uSampler;
-        uniform vec4 filterArea;
-        uniform vec2 dimensions;
-
-        uniform float uStrength;
-
-        varying vec2 vTextureCoord;
-
-        void main() {
-          vec2 uv = vTextureCoord;
-          vec2 texelSize = 1.0 / filterArea.xy;
-          vec4 color = texture2D(uSampler, uv);
-
-          vec4 blur = texture2D(uSampler, uv + vec2(0.5 * texelSize.x, -texelSize.y));
-          blur += texture2D(uSampler, uv + vec2(-texelSize.x, 0.5 * -texelSize.y));
-          blur += texture2D(uSampler, uv + vec2(texelSize.x, 0.5 * texelSize.y));
-          blur += texture2D(uSampler, uv + vec2(0.5 * -texelSize.x, texelSize.y));
-          blur /= 4.0;
-
-          vec4 lumaStrength = vec4(0.2126, 0.7152, 0.0722, 0.0) * uStrength * 0.7;
-          vec4 sharp = color - blur;
-          color.xyz += clamp(dot(sharp, lumaStrength), -0.5, 0.5);
-
-          gl_FragColor = vec4(color);
-        }
-        `.split( '\n' ).reduce(( c, a ) => c + a.trim() + '\n' );
+    protected _mainBuffer: RenderTexture;
+    protected _indexBuffer: RenderTexture;
 
     constructor( context: Context, owner: ArtboardObject, def: ImageComponentDef ) {
         this._context = context;
@@ -68,21 +46,31 @@ export default class ImageComponent implements IComponent {
     }
 
     public async load(): Promise<void> {
-        return new Promise<void>(( resolve, reject ) => {
-            /*if ( this._src ) {
-                this._context.getAssetsLoader().push(
-                    {
-                        id: this._id,
-                        src: this._src
+        return new Promise<void>((resolve, reject) => {
+            if (this._src) {
+                this._asset = new Texture2DLoader(this._context.renderer, 4, this._src, this._src);
+                this._asset.load(
+                    () => {
+                        const mesh: MeshQuad = new MeshQuad(this._context.renderer);
+                        this._material = new MaterialTexture2D(this._context.renderer);
+                        this._material.setTexture(this._asset);
+
+                        this._renderable = new Renderable(this._context.renderer, mesh, this._material);
+                        this._transform = this._renderable.getTransform();
+
+                        this._mainBuffer = this._context.getBuffer(Buffer.Main);
+                        this._indexBuffer = this._context.getBuffer(Buffer.Indexes);            
+
+                        resolve();
                     },
                     () => {
-                        this.addContent( this._id );
+                        console.log('texture not found');
                         resolve();
                     }
                 );
             } else {
                 resolve();
-            }*/
+            }
         });
     }
 
@@ -90,18 +78,10 @@ export default class ImageComponent implements IComponent {
         let component = {
             id: this._id,
             class: this._class,
-            src: this._src, //TODO: make sure that both this is updated and the asset is loaded
+            src: this._src,
         };
-        //TODO: Fix this condition
-        if ( this._src ) {
-            const extensionIndex: number = this._src.lastIndexOf( "." );
-            const extension: string = this._src.substr( extensionIndex + 1 );
-            if ( extension === "gif" ) {
-                component = Object.assign( component, { loop: this._canLoop } )
-            }
-        }
-        return component;
 
+        return component;
     }
 
     public async clone( newOwner: ArtboardObject = null ): Promise<IComponent> {
@@ -111,63 +91,48 @@ export default class ImageComponent implements IComponent {
         return Factory.CreateComponent( this._context, owner, def );
     }
 
-    public getSrc = (): string => {
+    public get src(): string {
         return this._src;
     }
 
-    protected addContent( key: string ): void {
-        /*const asset: any = this._context.getAssetsLoader().getAsset( key );
-        const content: any = asset.content;
-
-        const extensionIndex: number = this._src.lastIndexOf( "." );
-        const extension: string = this._src.substr( extensionIndex + 1 ).toLowerCase();
-
-        this._frames.push( content.texture );
-
-        if ( this._frames.length > 0 ) {
-            this._canAnimate = this._frames.length > 1;
-
-            this._sprite = new PIXI.Sprite( this._frames[0] );
-            this._sprite.anchor.set( 0 );
-            this._sprite.x -= this._sprite.width * 0.5;
-            this._sprite.y -= this._sprite.height * 0.5;
-
-            // let filter:any = new PIXI.Filter(null, this._sharpening);
-            // filter.uniforms.uStrength = 40.0;
-            // this._sprite.filters = [filter];
-
-            this.addChild( this._sprite );
-        } else {
-            this._canAnimate = false;
-        }*/
+    public height(): number {
+        return this._transform.scale.x;
     }
 
-    /*public getHeight(): number {
-        return this._sprite.height;
+    public width(): number {
+        return this._transform.scale.y;
     }
-
-    public getWidth(): number {
-        return this._sprite.width;
-    }*/
 
     public getClass(): Class {
         return this._class;
     }
 
-    public isEnabled(): boolean {
-        return this._isEnabled;
-    }
-
     public update(): void {
-        
+        this._transform.setPosition(this._globalTransform.position);
+
+        // Note: This is not ideal, renderables should be added to render lists
+        // to avoid state changes and to dynamically batch render objects
+        // but I do not have the time to code one.
+        this._context.renderer.setRenderTarget(this._mainBuffer);
+        //this._material.indexMask = 0;
+        this._renderable.draw(this._context.camera);
+
+        /*this._context.renderer.setRenderTarget(this._indexBuffer);
+        this._material.indexMask = 1;
+        this._renderable.draw(this._context.camera);*/
     }
 
     public onAdded(): void {
+        const index: number = this._context.indexList.addComponent(this);
+        //this._material.index = index;
 
+        this._globalTransform = this._owner.transform.globalTransform;
+        this._transform.setPosition(this._globalTransform.position);
     }
 
     public onRemoved(): void {
-
+        this._context.indexList.removeComponent(this);
+        //this._material.index = 0;
     }
 
     public destruct(): void {

@@ -97,7 +97,7 @@ class AssetsLoader {
     if (index >= 0) {
       this._loading.splice(index, 1);
 
-      this._done[asset.getName()] = asset;
+      this._done[asset.name] = asset;
       this._doneCounter += 1;
     }
 

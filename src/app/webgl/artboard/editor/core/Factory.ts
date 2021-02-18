@@ -11,6 +11,7 @@ import Renderer from '../../../lib/renderer/core/Renderer';
 import Camera from '../../../lib/renderer/core/Camera';
 import TransformComponent from './components/TransformComponent';
 import RectangleComponent from './components/RectangleComponent';
+import AssetsLoader from '../../../lib/renderer/loader/AssetsLoader';
 
 /**
  * Created by mdavids on 31/10/2017.
@@ -27,10 +28,6 @@ export default class Factory {
         [Class.ArtboardObject]: ArtboardObject,
     };
 
-    /*public static CreateAssetsLoader(): AssetsLoader {
-        return new AssetsLoader();
-    }*/
-
     public static async CreateProject( context: Context, projectDef: ProjectDef ): Promise<Project> {
         const project: Project = new Project( context, projectDef );
         const scene: ArtboardObject = await Factory.CreateArtboardObject( context, projectDef.scene );
@@ -44,12 +41,11 @@ export default class Factory {
         const height:number = renderer.getCanvas().height;
         const aspect: number = width / height;
         const context: Context = new Context();
+        context.assetsLoader = new AssetsLoader();
 
         context.renderer = renderer;
         context.addBuffer(Buffer.Main, new RenderTexture(renderer, width, height, 1));
         context.addBuffer(Buffer.Indexes, new RenderTexture(renderer, width, height, 2));
-        //const assetsLoader = assetLoader ? assetLoader : this.CreateAssetsLoader();
-        //context.assetsLoader = assetsLoader;
 
         const fov: number = 40;
         const fovy: number = fov * 0.0174533;

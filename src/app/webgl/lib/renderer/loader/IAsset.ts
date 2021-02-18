@@ -2,7 +2,7 @@
  * Created by mdavids on 14/12/2016.
  */
 interface IAsset {
-  getName(): string;
+  readonly name: string;
 
   load(onSuccess: (asset: IAsset) => void, onFailure: (asset: IAsset) => void): void;
   cancel(): void;

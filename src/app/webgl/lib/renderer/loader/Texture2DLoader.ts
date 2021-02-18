@@ -22,7 +22,7 @@ class Texture2DLoader extends Texture2D implements IAsset {
     this._url = url;
   }
 
-  public getName(): string {
+  public get name(): string {
     return this._name;
   }
 

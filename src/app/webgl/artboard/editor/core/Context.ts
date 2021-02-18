@@ -1,12 +1,13 @@
 import Camera from '../../../lib/renderer/core/Camera';
 import Renderer from '../../../lib/renderer/core/Renderer';
 import RenderTexture from '../../../lib/renderer/core/RenderTexture';
+import AssetsLoader from '../../../lib/renderer/loader/AssetsLoader';
 import ObjectIndexList from './ObjectIndexList';
 
 export default class Context {
     protected _renderer: Renderer;
     protected _camera: Camera;
-    // protected _assetsLoader: AssetsLoader;
+    protected _assetsLoader: AssetsLoader;
 
     protected _buffers: Map<string, RenderTexture> = new Map<string, RenderTexture>();
     protected _indexList: ObjectIndexList = new ObjectIndexList();
@@ -23,7 +24,7 @@ export default class Context {
         return this._indexList;
     }
 
-    public set renderer( value: Renderer ) {
+    public set renderer(value: Renderer) {
         this._renderer = value;
     }
 
@@ -31,7 +32,7 @@ export default class Context {
         return this._renderer;
     }
 
-    public set camera( value: Camera ) {
+    public set camera(value: Camera) {
         this._camera = value;
     }
 
@@ -39,11 +40,11 @@ export default class Context {
         return this._camera;
     }
 
-    /*public set assetsLoader( value: AssetsLoader ) {
+    public set assetsLoader(value: AssetsLoader) {
         this._assetsLoader = value;
     }
 
     public get assetsLoader(): AssetsLoader {
         return this._assetsLoader;
-    }*/
+    }
 }

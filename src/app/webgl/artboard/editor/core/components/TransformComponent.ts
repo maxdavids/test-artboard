@@ -27,9 +27,9 @@ export default class TransformComponent implements IComponent {
 
         this._class = clazz;
         this._id = id;
-        this._localTransform.setPositionXYZ(x, y, 0);
-        this._localTransform.setScaleXYZ(scaleX, scaleY, 1);
-        this._localTransform.setRotationXYZ(0, rotation, 0);
+        this._globalTransform.setPositionXYZ(x, y, 0);
+        this._globalTransform.setScaleXYZ(scaleX, scaleY, 1);
+        this._globalTransform.setRotationXYZ(0, rotation, 0);
     }
 
     public async load(): Promise<void> {
@@ -45,10 +45,10 @@ export default class TransformComponent implements IComponent {
         return {
             id: this._id,
             class: this._class,
-            x: this._localTransform.position.x,
-            y: this._localTransform.position.y,
-            scaleX: this._localTransform.scale.x,
-            scaleY: this._localTransform.scale.y,
+            x: this._globalTransform.position.x,
+            y: this._globalTransform.position.y,
+            scaleX: this._globalTransform.scale.x,
+            scaleY: this._globalTransform.scale.y,
             rotation: rotation,
         };
     }
