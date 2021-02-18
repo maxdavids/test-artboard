@@ -11,7 +11,6 @@ import RectangleMaterial from "./materials/RectangleMaterial";
 import Renderable from "../../../../lib/renderer/core/Renderable";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
 import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
-import TransformComponent from "./TransformComponent";
 import Transform from "../../../../lib/renderer/core/Transform";
 
 export default class ImageComponent implements IComponent {
@@ -31,8 +30,6 @@ export default class ImageComponent implements IComponent {
     protected _material: RectangleMaterial;
     protected _renderable: Renderable;
     protected _transform: Transform;
-
-    protected _transformComponent: TransformComponent;
     protected _globalTransform: Transform;
 
     constructor( context: Context, owner: ArtboardObject, def: RectangleComponentDef ) {
@@ -108,8 +105,7 @@ export default class ImageComponent implements IComponent {
         const index: number = this._context.indexList.addComponent(this);
         this._material.index = index;
 
-        this._transformComponent = <TransformComponent>this._owner.getComponentByClass(Class.TransformComponent);
-        this._globalTransform = this._transformComponent.globalTransform;
+        this._globalTransform = this._owner.transform.globalTransform;
         this._transform.setPosition(this._globalTransform.position);
     }
 

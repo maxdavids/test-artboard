@@ -54,10 +54,10 @@ export default class Factory {
         const fov: number = 40;
         const fovy: number = fov * 0.0174533;
         const orthoSize: number = 30;
-        const camera: Camera = new Camera(renderer, fovy, 0.1, 100, aspect);
-        camera.forceOrthogonal(height * orthoSize / 1080);
+        const camera: Camera = new Camera(renderer, fovy, 0.1, 1, aspect);
+        camera.forceOrthogonal(orthoSize);
         camera.setViewport(0, 0, width, height);
-        camera.getTransform().setPositionXYZ(0, 0, 10);
+        camera.getTransform().setPositionXYZ(0, 0, 0.5);
         context.camera = camera;
 
         return context;

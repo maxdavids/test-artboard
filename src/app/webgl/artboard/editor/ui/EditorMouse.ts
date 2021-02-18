@@ -1,3 +1,4 @@
+import Camera from "../../../lib/renderer/core/Camera";
 import RenderTexture from "../../../lib/renderer/core/RenderTexture";
 import Vector2 from "../../../lib/renderer/core/Vector2";
 import Vector3 from "../../../lib/renderer/core/Vector3";
@@ -42,16 +43,15 @@ export default class EditorMouse {
             this.updateMousePosition(event.clientX, event.clientY);
             this._isDragging = true;
 
-            // TODO
+            const camera: Camera = this._context.camera;
             const result: Vector3 = new Vector3();
-            ArtboardUtils.project2DReference(
+            ArtboardUtils.ProjectPoint(
                 result,
                 this._mousePosition.x,
                 this._mousePosition.y,
-                this._context.camera.getTransform().position.z,
-                this._context.camera.vSize.x,
-                this._context.camera.vSize.y,
-                this._context.camera
+                camera.vSize.x,
+                camera.vSize.y,
+                camera,
             );
 
             this._selectedObject.transform.globalTransform.setPosition(result);
@@ -70,19 +70,17 @@ export default class EditorMouse {
 
     private onMouseDown = (event: any): void => {
         this._isMouseDown = true;
+
+        const index: number = this.getIndexAt(this._mousePosition.x, this._mousePosition.y);
+        this._selectedObject = null;
+
+        if (index > 0) {
+            const selectedComponent: IComponent = this._context.indexList.getComponent(index);
+            this._selectedObject = selectedComponent._owner;
+        }
     }
 
     private onMouseUp = (event: any): void => {
-        if (!this._isDragging) {
-            const index: number = this.getIndexAt(this._mousePosition.x, this._mousePosition.y);
-            this._selectedObject = null;
-
-            if (index > 0) {
-                const selectedComponent: IComponent = this._context.indexList.getComponent(index);
-                this._selectedObject = selectedComponent._owner;
-            }
-        }
-
         this._isMouseDown = false;
         this._isDragging = false;
     }

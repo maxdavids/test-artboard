@@ -6,24 +6,53 @@ import Vector2 from '../../lib/renderer/core/Vector2';
 import { vec4 } from 'gl-matrix';
 
 export class ArtboardUtils {
-  public static project2DReference(
+  public static readonly BACK: Vector3 = new Vector3(0, 0, 1);
+
+  public static ProjectPoint(
     out: Vector3,
     x: number,
     y: number,
-    dist: number,
     refWidth: number,
     refHeight: number,
     camera: Camera,
+    planeZ: number = 0,
+    planeNormal: Vector3 = ArtboardUtils.BACK,
   ) {
-    const refAspect: number = refWidth / refHeight;
-    const scaleX: number = camera.getAspect() / refAspect;
     const projX: number = (x / refWidth) * 2 - 1;
     const projY: number = (1 - y / refHeight) * 2 - 1;
 
-    camera.getScreenRayRef(out, projX * scaleX, projY, 1);
-    out.normalize();
-    out.multiplyScalar(dist);
-    out.add(camera.getTransform().position);
+    const rayForward = new Vector3();
+    camera.getScreenRayRef(rayForward, projX, projY);
+    rayForward.normalize();
+
+    this.intersectBoundlessPlane(
+      out,
+      camera.getTransform().position,
+      rayForward,
+      planeZ,
+      planeNormal
+    );
+  }
+
+	public static intersectBoundlessPlane(
+    out: Vector3,
+    rayPosition: Vector3,
+    rayForward: Vector3,
+    planeDepth: number,
+    planeNormal: Vector3
+  ):void {
+    const FdotN:number = Vector3.dot(rayForward, planeNormal);
+
+    if (FdotN != 0) {
+      const offset: Vector3 = new Vector3();
+      offset.z = planeDepth - rayPosition.z;
+
+      const d: number = Vector3.dot(offset, planeNormal) / FdotN;
+      const ray: Vector3 = rayForward.clone();
+      ray.multiplyScalar(d);
+      out.setValuesFromVector(ray);
+      out.add(rayPosition);
+    }
   }
 
   public static getPointUVCoord(
