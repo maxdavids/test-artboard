@@ -1,7 +1,6 @@
 import ArtboardObject from './ArtboardObject';
 import IComponent from './components/IComponent';
 import { ArtboardObjectDef, ComponentDef, Class, ProjectDef } from './model/ArtboardDef';
-//import AssetsLoader from './AssetsLoader';
 import ImageComponent from './components/ImageComponent';
 import Project from './Project';
 import Context from './Context';

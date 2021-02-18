@@ -6,13 +6,13 @@ import { ImageComponentDef, Class, ComponentDef } from '../model/ArtboardDef';
 import IComponent from "./IComponent";
 import Factory from '../Factory';
 import Context from '../Context';
-import MaterialTexture2D from "../../../../lib/renderer/materials/MaterialTexture2D";
 import Texture2DLoader from "../../../../lib/renderer/loader/Texture2DLoader";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
 import Renderable from "../../../../lib/renderer/core/Renderable";
 import Transform from "../../../../lib/renderer/core/Transform";
 import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
 import { Buffer } from "../Enumeratives";
+import ImageMaterial from "./materials/ImageMaterial";
 
 export default class ImageComponent implements IComponent {
 
@@ -28,7 +28,7 @@ export default class ImageComponent implements IComponent {
     protected _context: Context;
 
     protected _asset: Texture2DLoader;
-    protected _material: MaterialTexture2D;
+    protected _material: ImageMaterial;
     protected _renderable: Renderable;
     protected _transform: Transform;
     protected _globalTransform: Transform;
@@ -52,7 +52,7 @@ export default class ImageComponent implements IComponent {
                 this._asset.load(
                     () => {
                         const mesh: MeshQuad = new MeshQuad(this._context.renderer);
-                        this._material = new MaterialTexture2D(this._context.renderer);
+                        this._material = new ImageMaterial(this._context.renderer);
                         this._material.setTexture(this._asset);
 
                         this._renderable = new Renderable(this._context.renderer, mesh, this._material);
@@ -114,25 +114,26 @@ export default class ImageComponent implements IComponent {
         // to avoid state changes and to dynamically batch render objects
         // but I do not have the time to code one.
         this._context.renderer.setRenderTarget(this._mainBuffer);
-        //this._material.indexMask = 0;
+        this._material.indexMask = 0;
         this._renderable.draw(this._context.camera);
 
-        /*this._context.renderer.setRenderTarget(this._indexBuffer);
+        this._context.renderer.setRenderTarget(this._indexBuffer);
         this._material.indexMask = 1;
-        this._renderable.draw(this._context.camera);*/
+        this._renderable.draw(this._context.camera);
     }
 
     public onAdded(): void {
         const index: number = this._context.indexList.addComponent(this);
-        //this._material.index = index;
+        this._material.index = index;
 
         this._globalTransform = this._owner.transform.globalTransform;
         this._transform.setPosition(this._globalTransform.position);
+        this._transform.setScaleXYZ(this._asset.aspect, 1, 1);
     }
 
     public onRemoved(): void {
         this._context.indexList.removeComponent(this);
-        //this._material.index = 0;
+        this._material.index = 0;
     }
 
     public destruct(): void {

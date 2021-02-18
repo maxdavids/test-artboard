@@ -13,7 +13,15 @@ export const TestProjectJSON = {
         id: uuidv4(),
         class: Class.ArtboardObject,
         components: [
-            ArtboardDefFactory.CreateTransformComponentDef(),
+            {
+                id: uuidv4(),
+                class: Class.TransformComponent,
+                x: 0,
+                y: 0,
+                scaleX: 1,
+                scaleY: 1,
+                rotation: 0,
+            },
         ],
         objects: [
             ArtboardDefFactory.CreateRectangleObjectDef(10, 10),

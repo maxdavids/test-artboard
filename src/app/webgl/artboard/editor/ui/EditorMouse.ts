@@ -41,6 +41,11 @@ export default class EditorMouse {
 
         if (this._isMouseDown && this._selectedObject !== null) {
             this.updateMousePosition(event.clientX, event.clientY);
+
+            if (!this._isDragging) {
+                console.log('EditorMouse, on start dragging.');
+            }
+
             this._isDragging = true;
 
             const camera: Camera = this._context.camera;
@@ -77,10 +82,22 @@ export default class EditorMouse {
         if (index > 0) {
             const selectedComponent: IComponent = this._context.indexList.getComponent(index);
             this._selectedObject = selectedComponent._owner;
+
+            console.log('EditorMouse, on object selected.');
         }
     }
 
     private onMouseUp = (event: any): void => {
+        if (this._isDragging) {
+            console.log('EditorMouse, on stop dragging.');
+        }
+
+        const index: number = this.getIndexAt(this._mousePosition.x, this._mousePosition.y);
+        if (index <= 0) {
+            this._selectedObject = null;
+            console.log('EditorMouse, on unselect.');
+        }
+
         this._isMouseDown = false;
         this._isDragging = false;
     }
