@@ -33,10 +33,11 @@ export default class EditorMouse {
         document.addEventListener('mouseup', this.onMouseUp);
     }
 
-    private onMouseMove(event: any): void {
+    private onMouseMove = (event: any): void => {
         this.updateMousePosition(event.clientX, event.clientY);
 
         if (this._isMouseDown && this._selectedObject !== null) {
+            this.updateMousePosition(event.clientX, event.clientY);
             this._isDragging = true;
 
             // TODO
@@ -54,11 +55,11 @@ export default class EditorMouse {
         }
     }
 
-    private onMouseDown(event: any): void {
+    private onMouseDown = (event: any): void => {
         this._isMouseDown = true;
     }
 
-    private onMouseUp(event: any): void {
+    private onMouseUp = (event: any): void => {
         if (!this._isDragging) {
             const index: number = this.getIndexAt(this._mousePosition.x, this._mousePosition.y);
             this._selectedObject = null;
