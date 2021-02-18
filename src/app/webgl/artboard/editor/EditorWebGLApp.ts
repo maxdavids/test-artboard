@@ -23,12 +23,12 @@ export class EditorWebGLApp extends WebGLApp {
     }
 
     this._renderer.setClearColor(0, 0, 0, 1);
-    this._context = Factory.CreateContext();
+    this._context = Factory.CreateContext(this._renderer);
     
     Factory.CreateProject(this._context, TestProjectJSON)
       .then((project) => {
         this._project = project;
-        this._ui = new EditorUI(this._context);
+        //this._ui = new EditorUI(this._context);
       });
   }
 
@@ -40,7 +40,7 @@ export class EditorWebGLApp extends WebGLApp {
     this._renderer.setRenderTarget(this._context.getBuffer(Buffer.Indexes));
     this._renderer.clear();
 
-    this._project.update();
+    //this._project.update();
   }
 
   protected onDestruct(): void {

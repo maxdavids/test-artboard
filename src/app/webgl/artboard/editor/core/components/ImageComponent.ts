@@ -1,16 +1,13 @@
 /**
  * Created by mdavids on 31/10/2017.
  */
-import * as PIXI from 'pixi.js';
-import IDisplayable from "./IDisplayable";
 import ArtboardObject from "../ArtboardObject";
-import AssetsLoader from "../AssetsLoader";
 import { ImageComponentDef, Class, ComponentDef } from '../model/ArtboardDef';
 import IComponent from "./IComponent";
 import Factory from '../Factory';
 import Context from '../Context';
 
-export default class ImageComponent extends PIXI.Container implements IDisplayable {
+export default class ImageComponent implements IComponent {
 
     readonly _owner: ArtboardObject;
 
@@ -22,9 +19,6 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
     protected _src: string;
 
     protected _context: Context;
-
-    protected _sprite: PIXI.Sprite;
-    protected _frames: PIXI.Texture[] = [];
 
     protected _canAnimate: boolean = false; // canAnimate is true when imageComponent has frames > 0
     protected _canLoop: boolean = true;
@@ -65,22 +59,17 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
         `.split( '\n' ).reduce(( c, a ) => c + a.trim() + '\n' );
 
     constructor( context: Context, owner: ArtboardObject, def: ImageComponentDef ) {
-        super();
-
         this._context = context;
         this._owner = owner;
 
         this._class = def.class;
         this._id = def.id;
         this._src = def.src;
-
-        this._canLoop = def.loop;
     }
 
     public async load(): Promise<void> {
         return new Promise<void>(( resolve, reject ) => {
-
-            if ( this._src ) {
+            /*if ( this._src ) {
                 this._context.getAssetsLoader().push(
                     {
                         id: this._id,
@@ -89,17 +78,12 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
                     () => {
                         this.addContent( this._id );
                         resolve();
-
-                        //TODO: Falta exception cases
-                        // reject();
                     }
                 );
             } else {
-                //There was no src set, so there is nothing to load
                 resolve();
-            }
-        } );
-
+            }*/
+        });
     }
 
     public serialize(): ImageComponentDef {
@@ -132,7 +116,7 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
     }
 
     protected addContent( key: string ): void {
-        const asset: any = this._context.getAssetsLoader().getAsset( key );
+        /*const asset: any = this._context.getAssetsLoader().getAsset( key );
         const content: any = asset.content;
 
         const extensionIndex: number = this._src.lastIndexOf( "." );
@@ -155,43 +139,27 @@ export default class ImageComponent extends PIXI.Container implements IDisplayab
             this.addChild( this._sprite );
         } else {
             this._canAnimate = false;
-        }
+        }*/
     }
 
-    public getHeight(): number {
+    /*public getHeight(): number {
         return this._sprite.height;
     }
 
     public getWidth(): number {
         return this._sprite.width;
-    }
+    }*/
 
     public getClass(): Class {
         return this._class;
-    }
-
-    public getDisplayObject(): PIXI.DisplayObject {
-        return this;
     }
 
     public isEnabled(): boolean {
         return this._isEnabled;
     }
 
-    public enable(): void {
-        this._sprite.visible = true;
-        this._isEnabled = true;
-    }
-
-    public disable(): void {
-        this._sprite.visible = false;
-        this._isEnabled = false;
-    }
-
     public update(): void {
-        if ( this._isEnabled && this._canAnimate ) {
-            this._sprite.texture = this._frames[this._currentFrameIndex];
-        }
+        
     }
 
     public onAdded(): void {

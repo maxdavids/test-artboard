@@ -26,9 +26,7 @@ export default class RectangleMaterial extends Material {
         uniform mat4 uViewProjection;
         
         void main(void) {
-            gl_Position =  uViewProjection * uWorld * vec4(aPos, 1.0);
-            
-            vUV = aUV;
+          gl_Position =  uViewProjection * uWorld * vec4(aPos, 1.0);
         }
     `;
 

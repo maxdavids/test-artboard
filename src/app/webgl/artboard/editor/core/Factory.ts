@@ -1,10 +1,16 @@
 import ArtboardObject from './ArtboardObject';
 import IComponent from './components/IComponent';
 import { ArtboardObjectDef, ComponentDef, Class, ProjectDef } from './model/ArtboardDef';
-import AssetsLoader from './AssetsLoader';
+//import AssetsLoader from './AssetsLoader';
 import ImageComponent from './components/ImageComponent';
 import Project from './Project';
 import Context from './Context';
+import { Buffer } from './Enumeratives';
+import RenderTexture from '../../../lib/renderer/core/RenderTexture';
+import Renderer from '../../../lib/renderer/core/Renderer';
+import Camera from '../../../lib/renderer/core/Camera';
+import TransformComponent from './components/TransformComponent';
+import RectangleComponent from './components/RectangleComponent';
 
 /**
  * Created by mdavids on 31/10/2017.
@@ -13,15 +19,17 @@ export default class Factory {
 
     protected static COMPONENTS: Object = {
         [Class.ImageComponent]: ImageComponent,
+        [Class.TransformComponent]: TransformComponent,
+        [Class.RectangleComponent]: RectangleComponent,
     };
 
     protected static ARTBOARD_OBJECTS: Object = {
         [Class.ArtboardObject]: ArtboardObject,
     };
 
-    public static CreateAssetsLoader(): AssetsLoader {
+    /*public static CreateAssetsLoader(): AssetsLoader {
         return new AssetsLoader();
-    }
+    }*/
 
     public static async CreateProject( context: Context, projectDef: ProjectDef ): Promise<Project> {
         const project: Project = new Project( context, projectDef );
@@ -31,10 +39,27 @@ export default class Factory {
         return project;
     }
 
-    public static CreateContext( assetLoader?: AssetsLoader ): Context {
+    public static CreateContext(renderer: Renderer): Context {
+        const width:number = renderer.getCanvas().width;
+        const height:number = renderer.getCanvas().height;
+        const aspect: number = width / height;
         const context: Context = new Context();
-        const assetsLoader = assetLoader ? assetLoader : this.CreateAssetsLoader();
-        context.assetsLoader = assetsLoader;
+
+        context.renderer = renderer;
+        context.addBuffer(Buffer.Main, new RenderTexture(renderer, width, height, 1));
+        context.addBuffer(Buffer.Indexes, new RenderTexture(renderer, width, height, 2));
+        //const assetsLoader = assetLoader ? assetLoader : this.CreateAssetsLoader();
+        //context.assetsLoader = assetsLoader;
+
+        const fov: number = 40;
+        const fovy: number = fov * 0.0174533;
+        const orthoSize: number = 30;
+        const camera: Camera = new Camera(renderer, fovy, 0.1, 100, aspect);
+        camera.forceOrthogonal(height * orthoSize / 1080);
+        camera.setViewport(0, 0, width, height);
+        camera.getTransform().setPositionXYZ(0, 0, 10);
+        context.camera = camera;
+
         return context;
     }
 

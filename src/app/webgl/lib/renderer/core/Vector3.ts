@@ -1,5 +1,4 @@
 import Quaternion from './Quaternion';
-import Spherical from './Spherical';
 class Vector3 {
   public x: number;
   public y: number;
@@ -223,14 +222,6 @@ class Vector3 {
       r.randomizeSeeded((_seed += 1));
     } while (r.length() > 1);
     return r;
-  }
-
-  public setFromSpherical(s: Spherical): void {
-    const sinPhiRadius: number = Math.sin(s.phi) * s.radius;
-
-    this.x = sinPhiRadius * Math.sin(s.theta);
-    this.y = Math.cos(s.phi) * s.radius;
-    this.z = sinPhiRadius * Math.cos(s.theta);
   }
 
   /*    private static fract1(x:number):number
