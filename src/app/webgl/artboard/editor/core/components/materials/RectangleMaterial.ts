@@ -24,9 +24,13 @@ export default class RectangleMaterial extends Material {
         
         uniform mat4 uWorld;
         uniform mat4 uViewProjection;
+
+        varying vec2 vUV;
         
         void main(void) {
           gl_Position =  uViewProjection * uWorld * vec4(aPos, 1.0);
+
+          vUV = aUV;
         }
     `;
 
@@ -36,9 +40,30 @@ export default class RectangleMaterial extends Material {
         uniform float uIndex;
         uniform float uIndexMask;
         uniform vec4 uColor;
-        
+
+        varying vec2 vUV;
+
+        float roundBox(vec2 p, vec2 b, float r) {
+          float df = length(max(abs(p) - b + r, 0.0)) - r;
+          return 1.0 - smoothstep(0.0, 0.01, df);
+        }
+
+        float quadrant(vec2 p, vec2 q) {
+          return abs(q.x - step(0.5, 1.0 - p.x)) * abs(q.y - step(0.5, 1.0 - p.y));
+        }
+
         void main(void) {
-            vec4 color = mix(uColor, vec4(uIndex / 255.0), uIndexMask);
+            vec2 point = vUV - 0.5;
+            vec2 halfSize = vec2(0.5);
+            vec4 radius = vec4(0.25, 0.5, 0.15, 0.3);
+            
+            float shape = 0.0;
+            shape += roundBox(point, halfSize, radius.x) * quadrant(vUV, vec2(0.0, 1.0));
+            shape += roundBox(point, halfSize, radius.y) * quadrant(vUV, vec2(1.0, 1.0));
+            shape += roundBox(point, halfSize, radius.z) * quadrant(vUV, vec2(0.0, 0.0));
+            shape += roundBox(point, halfSize, radius.w) * quadrant(vUV, vec2(1.0, 0.0));
+
+            vec4 color = mix(uColor * shape, vec4(uIndex / 255.0) * step(0.5, shape), uIndexMask);
             gl_FragColor = color;
         }
     `;
