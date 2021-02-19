@@ -12,6 +12,7 @@ import Renderable from "../../../../lib/renderer/core/Renderable";
 import MeshQuad from "../../../../lib/renderer/core/MeshQuad";
 import RenderTexture from "../../../../lib/renderer/core/RenderTexture";
 import Transform from "../../../../lib/renderer/core/Transform";
+import Vector4 from "../../../../lib/renderer/core/Vector4";
 
 export default class ImageComponent implements IComponent {
 
@@ -24,6 +25,7 @@ export default class ImageComponent implements IComponent {
     protected _context: Context;
     protected _width: number = 0;
     protected _height: number = 0;
+    protected _radius: number[] = [0, 0, 0, 0];
 
     protected _mainBuffer: RenderTexture;
     protected _indexBuffer: RenderTexture;
@@ -36,18 +38,21 @@ export default class ImageComponent implements IComponent {
         this._context = context;
         this._owner = owner;
 
-        let { class:clazz, id, width, height } = def;
+        let { class:clazz, id, width, height, radius } = def;
 
         this._class = clazz;
         this._id = id;
         this._width = width;
         this._height = height;
+        this._radius = radius;
     }
 
     public async load(): Promise<void> {
         return new Promise<void>(( resolve, reject ) => {
             const mesh: MeshQuad = new MeshQuad(this._context.renderer);
             this._material = new RectangleMaterial(this._context.renderer);
+            this._material.aspect = this._width / this._height;
+            this._material.radius = new Vector4(this._radius[0], this._radius[1], this._radius[2], this._radius[3]);
             this._renderable = new Renderable(this._context.renderer, mesh, this._material);
             this._transform = this._renderable.getTransform();
 
@@ -64,6 +69,7 @@ export default class ImageComponent implements IComponent {
             class: this._class,
             width: this._width,
             height: this._height,
+            radius: [...this._radius],
         };
     }
 
@@ -76,6 +82,10 @@ export default class ImageComponent implements IComponent {
 
     public getClass(): Class {
         return this._class;
+    }
+
+    public get radius(): number[] {
+        return this._radius;
     }
 
     public get height(): number {
@@ -107,6 +117,7 @@ export default class ImageComponent implements IComponent {
 
         this._globalTransform = this._owner.transform.globalTransform;
         this._transform.setPosition(this._globalTransform.position);
+        this._transform.setScaleXYZ(this._width, this._height, 1);
     }
 
     public onRemoved(): void {

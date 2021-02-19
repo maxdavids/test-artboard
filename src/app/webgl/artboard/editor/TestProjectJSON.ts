@@ -24,7 +24,6 @@ export const TestProjectJSON = {
             },
         ],
         objects: [
-            ArtboardDefFactory.CreateRectangleObjectDef(10, 10),
             {
                 id: uuidv4(),
                 class: Class.ArtboardObject,
@@ -32,7 +31,30 @@ export const TestProjectJSON = {
                     {
                         id: uuidv4(),
                         class: Class.TransformComponent,
-                        x: 5,
+                        x: -200,
+                        y: 0,
+                        scaleX: 1,
+                        scaleY: 1,
+                        rotation: 0,
+                    },
+                    {
+                        id: uuidv4(),
+                        class: Class.RectangleComponent,
+                        width: 300,
+                        height: 200,
+                        radius: [0.1, 0.2, 0.0, 0.3],
+                    }
+                ],
+                objects: []
+            },
+            {
+                id: uuidv4(),
+                class: Class.ArtboardObject,
+                components: [
+                    {
+                        id: uuidv4(),
+                        class: Class.TransformComponent,
+                        x: 512,
                         y: 0,
                         scaleX: 1,
                         scaleY: 1,

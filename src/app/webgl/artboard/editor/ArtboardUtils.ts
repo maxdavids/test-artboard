@@ -1,9 +1,5 @@
 import Camera from '../../lib/renderer/core/Camera';
 import Vector3 from '../../lib/renderer/core/Vector3';
-import Transform from '../../lib/renderer/core/Transform';
-import Vector4 from '../../lib/renderer/core/Vector4';
-import Vector2 from '../../lib/renderer/core/Vector2';
-import { vec4 } from 'gl-matrix';
 
 export class ArtboardUtils {
   public static readonly BACK: Vector3 = new Vector3(0, 0, 1);
@@ -25,7 +21,7 @@ export class ArtboardUtils {
     camera.getScreenRayRef(rayForward, projX, projY);
     rayForward.normalize();
 
-    this.intersectBoundlessPlane(
+    this.intersectPlane(
       out,
       camera.getTransform().position,
       rayForward,
@@ -34,7 +30,7 @@ export class ArtboardUtils {
     );
   }
 
-	public static intersectBoundlessPlane(
+	public static intersectPlane(
     out: Vector3,
     rayPosition: Vector3,
     rayForward: Vector3,
@@ -54,85 +50,4 @@ export class ArtboardUtils {
       out.add(rayPosition);
     }
   }
-
-  public static getPointUVCoord(
-    out: Vector2,
-    point: Vector4,
-    parent: Transform,
-    camera: Camera,
-  ): void {
-    const pos: Float32Array = point.toF32();
-    vec4.transformMat4(pos, pos, parent.getMatrix());
-    vec4.transformMat4(pos, pos, camera.getViewProjection());
-
-    pos[0] /= pos[3];
-    pos[1] /= pos[3];
-
-    out.x = pos[0] * 0.5 + 0.5;
-    out.y = 1 - (pos[1] * 0.5 + 0.5);
-  }
-
-  public static getPixelToUnits(atDepth:number, camera:Camera):number {
-    const bottomLeft:Vector3 = camera.getScreenRay(-1, -1, 1);
-    const topRight:Vector3 = camera.getScreenRay(1, 1, 1);
-
-    bottomLeft.normalize();
-    topRight.normalize();
-
-    bottomLeft.multiplyScalar(atDepth);
-    topRight.multiplyScalar(atDepth);
-
-    return (topRight.y - bottomLeft.y) / window.innerHeight;
-  }
-
-  /*
-    public getCurrentFrameAsImage(): HTMLImageElement {
-        return this.renderer.plugins.extract.image(this.stage);
-    }
-
-    public getCurrentFrameAsPixels(): Uint8ClampedArray {
-        return this.renderer.plugins.extract.pixels(this.stage);
-    }
-
-    public getCurrentFrameAsBlob(callback: (blob: Blob) => void,
-                                 format: string = 'image/jpeg',
-                                 quality: number = 0.95): void {
-        this.renderer.plugins.extract.canvas(this.stage).toBlob(callback, format, quality);
-    }
-
-    public getObjectSnapshot(object:ArtboardObject, boundsWidthHeight:number): HTMLImageElement {
-        const objectStartTime:number = object.getStartTime();
-
-        const toDisable:IComponent[] = [];
-        toDisable.concat(
-            object.getComponentsByClass(Class.AnimationComponent),
-            object.getComponentsByClass(Class.TransitionComponent)
-        );
-
-        for (const component of toDisable) {
-            component.disable();
-        }
-
-        object.update(objectStartTime);
-
-        const objectBounds:PIXI.Rectangle = object.getLocalBounds();
-        const objectMaxSize:number = Math.max(objectBounds.width, objectBounds.height);
-        const scale:number = boundsWidthHeight / objectMaxSize;
-
-        let result:HTMLImageElement;
-        if (this.renderer instanceof WebGLRenderer) {
-            result = EngineUtils.CreateImageFromObject(object, scale, this.renderer as WebGLRenderer);
-        } else {
-            result = this.renderer.plugins.extract.image(object);
-        }
-
-        for (const component of toDisable) {
-            component.enable();
-        }
-
-        object.update(objectStartTime);
-
-        return result;
-    }
-  */
 }

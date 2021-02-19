@@ -128,7 +128,7 @@ export default class ImageComponent implements IComponent {
 
         this._globalTransform = this._owner.transform.globalTransform;
         this._transform.setPosition(this._globalTransform.position);
-        this._transform.setScaleXYZ(this._asset.aspect, 1, 1);
+        this._transform.setScaleXYZ(this._asset.width, this._asset.height, 1);
     }
 
     public onRemoved(): void {

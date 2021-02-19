@@ -94,6 +94,16 @@ class Camera /*extends Destructible*/ {
     return this._fov;
   }
 
+  public setOrthoSize(value: number): void {
+    this._orthoSize = value;
+
+    this.updateProjection();
+  }
+
+  public getOrthoSize(): number {
+    return this._orthoSize;
+  }
+
   public getAspect(): number {
     return this._aspect;
   }

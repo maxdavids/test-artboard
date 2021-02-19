@@ -74,7 +74,8 @@ export default class ArtboardDefFactory {
             id: uuidv4(),
             class: Class.RectangleComponent,
             width: width,
-            height: height
+            height: height,
+            radius: [0.05, 0.05, 0.05, 0.05],
         }
     }
 

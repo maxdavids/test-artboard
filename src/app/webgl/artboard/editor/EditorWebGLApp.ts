@@ -43,7 +43,7 @@ export class EditorWebGLApp extends WebGLApp {
   }
 
   protected onRender(): void {
-    // TODO Move to RenderingContext::clear()
+    // TODO Move to RenderingContext
     this._renderer.setRenderTarget(this._mainBuffer);
     this._renderer.clear();
 
@@ -53,6 +53,16 @@ export class EditorWebGLApp extends WebGLApp {
     this._project.update();
 
     this._renderer.blitToScreen(this._mainBuffer, this._blitMaterial);
+  }
+
+  protected onResize(): void {
+    // TODO Move to RenderingContext
+    const newWidth: number = this.canvas.width;
+    const newHeight: number = this.canvas.height;
+
+    this._mainBuffer.setTextureSize(newWidth, newHeight);
+    this._indexesBuffer.setTextureSize(newWidth, newHeight);
+    this._context.camera.setViewport(0, 0, newWidth, newHeight);
   }
 
   protected onDestruct(): void {

@@ -49,6 +49,7 @@ export interface RectangleComponentDef extends ComponentDef {
     class: Class;
     width: number;
     height: number;
+    radius: number[];
 }
 
 export interface ImageComponentDef extends ComponentDef {

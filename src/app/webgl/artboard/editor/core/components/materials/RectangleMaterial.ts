@@ -13,7 +13,10 @@ export default class RectangleMaterial extends Material {
     public index: number = 0;
     public indexMask: number = 0;
 
+    public aspect: number = 1;
+
     public color: Vector4 = new Vector4(1, 1, 1, 1);
+    public radius: Vector4 = new Vector4();
 
     private vertex: string = `
         precision highp float;
@@ -34,18 +37,23 @@ export default class RectangleMaterial extends Material {
         }
     `;
 
-    private fragment: string = `
+    private fragment: string = `#extension GL_OES_standard_derivatives : enable
         precision highp float;
-        
+
         uniform float uIndex;
         uniform float uIndexMask;
         uniform vec4 uColor;
+
+        uniform vec4 uRadius;
+        uniform float uAspect;
 
         varying vec2 vUV;
 
         float roundBox(vec2 p, vec2 b, float r) {
           float df = length(max(abs(p) - b + r, 0.0)) - r;
-          return 1.0 - smoothstep(0.0, 0.01, df);
+          float aaw = 0.7 * length (vec2(dFdx(df), dFdy(df)));
+          float t = 0.0001;
+          return 1.0 - smoothstep(t - aaw, t + aaw, df);
         }
 
         float quadrant(vec2 p, vec2 q) {
@@ -53,15 +61,15 @@ export default class RectangleMaterial extends Material {
         }
 
         void main(void) {
-            vec2 point = vUV - 0.5;
-            vec2 halfSize = vec2(0.5);
-            vec4 radius = vec4(0.25, 0.5, 0.15, 0.3);
+            vec2 size = vec2(uAspect, 1.0);
+            vec2 halfSize = size * 0.5;
+            vec2 point = vUV * size - halfSize;
             
             float shape = 0.0;
-            shape += roundBox(point, halfSize, radius.x) * quadrant(vUV, vec2(0.0, 1.0));
-            shape += roundBox(point, halfSize, radius.y) * quadrant(vUV, vec2(1.0, 1.0));
-            shape += roundBox(point, halfSize, radius.z) * quadrant(vUV, vec2(0.0, 0.0));
-            shape += roundBox(point, halfSize, radius.w) * quadrant(vUV, vec2(1.0, 0.0));
+            shape += roundBox(point, halfSize, uRadius.x) * quadrant(vUV, vec2(0.0, 1.0));
+            shape += roundBox(point, halfSize, uRadius.y) * quadrant(vUV, vec2(1.0, 1.0));
+            shape += roundBox(point, halfSize, uRadius.z) * quadrant(vUV, vec2(0.0, 0.0));
+            shape += roundBox(point, halfSize, uRadius.w) * quadrant(vUV, vec2(1.0, 0.0));
 
             vec4 color = mix(uColor * shape, vec4(uIndex / 255.0) * step(0.5, shape), uIndexMask);
             gl_FragColor = color;
@@ -87,6 +95,9 @@ export default class RectangleMaterial extends Material {
       this.setFloat('uIndex', this.index);
       this.setFloat('uIndexMask', this.indexMask);
       this.setVector4('uColor', this.color);
+
+      this.setFloat('uAspect', this.aspect);
+      this.setVector4('uRadius', this.radius);
     }
   
     destruct() {

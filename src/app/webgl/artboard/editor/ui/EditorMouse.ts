@@ -9,6 +9,8 @@ import Context from "../core/Context";
 import { Buffer } from "../core/Enumeratives";
 
 export default class EditorMouse {
+    protected static readonly ZOOM_OFFSET: number = 20;
+
     protected _context: Context;
 
     protected _indexesBuffer: RenderTexture;
@@ -34,6 +36,7 @@ export default class EditorMouse {
         document.addEventListener('mousemove', this.onMouseMove);
         document.addEventListener('mousedown', this.onMouseDown);
         document.addEventListener('mouseup', this.onMouseUp);
+        document.addEventListener('wheel', this.onWheel);
     }
 
     private onMouseMove = (event: any): void => {
@@ -100,6 +103,13 @@ export default class EditorMouse {
 
         this._isMouseDown = false;
         this._isDragging = false;
+    }
+
+    private onWheel = (event: any): void => {
+        const offset: number = EditorMouse.ZOOM_OFFSET * (event.deltaY / Math.abs(event.deltaY));
+        const currentSize: number = this._context.camera.getOrthoSize();
+        const newSize: number = Math.max(10, currentSize + offset);
+        this._context.camera.setOrthoSize(newSize);
     }
 
     private updateMousePosition(clientX: number, clientY: number): void {
